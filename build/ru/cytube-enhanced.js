@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
 	__webpack_require__(2);
@@ -83,9 +83,9 @@
 	module.exports = __webpack_require__(42);
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhancedDefaultTranslates = window.cytubeEnhancedDefaultTranslates || {};
 	window.cytubeEnhancedDefaultTranslates.ru = {
@@ -283,175 +283,9 @@
 	    'OK': 'OK'
 	};
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
-
-	window.CytubeEnhancedHelpers = function (app) {
-	    var that = this;
-
-	    /**
-	     * Returns viewport size
-	     * @returns {{width: number, height: number}}
-	     */
-	    this.getViewportSize = function () {
-	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-	        return {
-	            width: width,
-	            height: height
-	        };
-	    };
-
-	    /**
-	     * Adds the text to chat input
-	     * @param message The text to add.
-	     * @param position The position of the adding. It can be 'begin' or 'end'.
-	     */
-	    this.addMessageToChatInput = function (message, position) {
-	        var $chatline = $(chatline);
-	        position = position || 'end';
-
-	        if (position === 'begin') {
-	            message = message + $chatline.val();
-	        } else {
-	            message = $chatline.val() + message;
-	        }
-
-	        $chatline.val(message).focus();
-	    };
-	};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
-	    var that = this;
-	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
-	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
-
-	    /**
-	     * Default data (set up by setDefault method)
-	     * @type {{}}
-	     */
-	    var defaultData = {};
-	    /**
-	     * Not dirty data
-	     * @type {{}}
-	     */
-	    var initialData = {};
-	    /**
-	     * Data
-	     * @type {{}}
-	     */
-	    var data = {};
-
-	    try {
-	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
-	        data = _.isPlainObject(data) ? data : {};
-	    } catch (error) {
-	        data = {};
-	    }
-	    initialData = _.cloneDeep(data);
-
-
-	    this.getDefault = function (name) {
-	        return defaultData[name];
-	    };
-
-
-	    this.setDefault = function (name, value) {
-	        value = _.cloneDeep(value);
-
-	        defaultData[name] = value;
-	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
-	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
-	    };
-
-
-	    this.get = function (name) {
-	        return data[name];
-	    };
-
-
-	    this.set = function (name, value) {
-	        var result = data[name] = _.cloneDeep(value);
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Toggles boolean option
-	     * @param name Boolean option's name
-	     * @returns {boolean}
-	     */
-	    this.toggle = function (name) {
-	        var result = data[name] = !data[name];
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Checks if attribute was changed
-	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
-	     * @returns {boolean}
-	     */
-	    this.isDirty = function (nameData) {
-	        var isDirty = false;
-
-	        if (_.isArray(nameData)) {
-	            for (var name in nameData) {
-	                if (!isEqual(data[name], initialData[name])) {
-	                    isDirty = true;
-	                    break;
-	                }
-	            }
-	        } else {
-	            isDirty = !isEqual(data[nameData], initialData[nameData]);
-	        }
-
-	        return isDirty;
-	    };
-
-
-	    this.save = function () {
-	        try {
-	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
-	        } catch (error) {
-	            return false;
-	        }
-	    };
-
-
-	    this.reset = function () {
-	        data = _.cloneDeep(defaultData);
-	    };
-
-
-	    var isEqual = function (value1, value2) {
-	        if (_.isArray(value1) && _.isArray(value2)) {
-	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
-	        } else {
-	            return _.isEqual(value1, value2);
-	        }
-	    };
-	};
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUISettings = function (app) {
 	    'use strict';
@@ -676,9 +510,9 @@
 	    };
 	};
 
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUITab = function (app, name, title, sort) {
 	    'use strict';
@@ -786,9 +620,9 @@
 	    };
 	};
 
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUI = function (app) {
 	    var that = this;
@@ -1035,9 +869,175 @@
 	    });
 	};
 
-/***/ },
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedHelpers = function (app) {
+	    var that = this;
+
+	    /**
+	     * Returns viewport size
+	     * @returns {{width: number, height: number}}
+	     */
+	    this.getViewportSize = function () {
+	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	        return {
+	            width: width,
+	            height: height
+	        };
+	    };
+
+	    /**
+	     * Adds the text to chat input
+	     * @param message The text to add.
+	     * @param position The position of the adding. It can be 'begin' or 'end'.
+	     */
+	    this.addMessageToChatInput = function (message, position) {
+	        var $chatline = $(chatline);
+	        position = position || 'end';
+
+	        if (position === 'begin') {
+	            message = message + $chatline.val();
+	        } else {
+	            message = $chatline.val() + message;
+	        }
+
+	        $chatline.val(message).focus();
+	    };
+	};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
+	    var that = this;
+	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
+	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
+
+	    /**
+	     * Default data (set up by setDefault method)
+	     * @type {{}}
+	     */
+	    var defaultData = {};
+	    /**
+	     * Not dirty data
+	     * @type {{}}
+	     */
+	    var initialData = {};
+	    /**
+	     * Data
+	     * @type {{}}
+	     */
+	    var data = {};
+
+	    try {
+	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
+	        data = _.isPlainObject(data) ? data : {};
+	    } catch (error) {
+	        data = {};
+	    }
+	    initialData = _.cloneDeep(data);
+
+
+	    this.getDefault = function (name) {
+	        return defaultData[name];
+	    };
+
+
+	    this.setDefault = function (name, value) {
+	        value = _.cloneDeep(value);
+
+	        defaultData[name] = value;
+	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
+	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
+	    };
+
+
+	    this.get = function (name) {
+	        return data[name];
+	    };
+
+
+	    this.set = function (name, value) {
+	        var result = data[name] = _.cloneDeep(value);
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Toggles boolean option
+	     * @param name Boolean option's name
+	     * @returns {boolean}
+	     */
+	    this.toggle = function (name) {
+	        var result = data[name] = !data[name];
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Checks if attribute was changed
+	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
+	     * @returns {boolean}
+	     */
+	    this.isDirty = function (nameData) {
+	        var isDirty = false;
+
+	        if (_.isArray(nameData)) {
+	            for (var name in nameData) {
+	                if (!isEqual(data[name], initialData[name])) {
+	                    isDirty = true;
+	                    break;
+	                }
+	            }
+	        } else {
+	            isDirty = !isEqual(data[nameData], initialData[nameData]);
+	        }
+
+	        return isDirty;
+	    };
+
+
+	    this.save = function () {
+	        try {
+	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
+	        } catch (error) {
+	            return false;
+	        }
+	    };
+
+
+	    this.reset = function () {
+	        data = _.cloneDeep(defaultData);
+	    };
+
+
+	    var isEqual = function (value1, value2) {
+	        if (_.isArray(value1) && _.isArray(value2)) {
+	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
+	        } else {
+	            return _.isEqual(value1, value2);
+	        }
+	    };
+	};
+
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(8);
 	window.CytubeEnhanced = function(language, modulesSettings, modulesExtends) {
@@ -1225,9 +1225,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
 	 * @license
@@ -17380,9 +17380,9 @@
 	}.call(this));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)(module), (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = function(module) {
 		if(!module.webpackPolyfill) {
@@ -17396,9 +17396,9 @@
 	}
 
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced = new window.CytubeEnhanced(
 	    (window.cytubeEnhancedSettings ? (window.cytubeEnhancedSettings.language || 'ru') : 'ru'),
@@ -17407,9 +17407,9 @@
 	);
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('additionalChatCommands', function (app, settings) {
 	    'use strict';
@@ -17689,11 +17689,11 @@
 
 	            return;
 	        } else if(e.keyCode === 9) { // Tab completion
-                try {
-                    window.chatTabComplete();
-                } catch (error) {
-                    console.error(error);
-                }
+	            try {
+	                window.chatTabComplete();
+	            } catch (error) {
+	                console.error(error);
+	            }
 	            e.preventDefault();
 	            return false;
 	        } else if(e.keyCode === 38) { // Up arrow (input history)
@@ -17729,9 +17729,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(13);
 	window.cytubeEnhanced.addModule('bbCodesHelper', function (app, settings) {
@@ -17852,9 +17852,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery.selection - jQuery Plugin
@@ -18212,9 +18212,9 @@
 	})(jQuery, window, window.document);
 
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatAvatars', function (app, settings) {
 	    'use strict';
@@ -18366,9 +18366,9 @@
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatCommandsHelp', function (app, settings) {
 	    'use strict';
@@ -18437,9 +18437,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatControls', function (app, settings) {
 	    'use strict';
@@ -18519,9 +18519,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*
 	TODO: keep pm messages, add ability to user to specify settings, ignore users
@@ -18581,10 +18581,10 @@
 
 
 	        if (data.username !== "[server]") {
-            		$messageWrapper.append($('<div class="pm-history-message-time">[' + timeString + ']</div>'));
-            		$messageWrapper.append($('<div class="pm-history-message-username">' + data.username + '</div>'));
-            		$messageWrapper.append($('<div class="pm-history-message-content">' + data.msg + '</div>'));
-        	}
+	            $messageWrapper.append($('<div class="pm-history-message-time">[' + timeString + ']</div>'));
+	            $messageWrapper.append($('<div class="pm-history-message-username">' + data.username + '</div>'));
+	            $messageWrapper.append($('<div class="pm-history-message-content">' + data.msg + '</div>'));
+	        }
 
 	        return $messageWrapper;
 	    };
@@ -18634,9 +18634,9 @@
 	    };
 	});
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('common', function (app, settings) {
 	    'use strict';
@@ -18696,9 +18696,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('customCss', function (app, settings) {
 	    'use strict';
@@ -18791,9 +18791,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('customJs', function (app, settings) {
 	    'use strict';
@@ -18884,9 +18884,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 21 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('extras', function (app, settings) {
 	    'use strict';
@@ -19017,9 +19017,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 22 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('favouritePictures', function (app) {
 	    'use strict';
@@ -19309,9 +19309,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 23 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(24)($);
 	__webpack_require__(25);
@@ -19429,9 +19429,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 24 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery Mousewheel 3.1.13
@@ -19656,9 +19656,9 @@
 	}));
 
 
-/***/ },
+/***/ }),
 /* 25 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery UI Touch Punch 0.2.3
@@ -19841,9 +19841,9 @@
 
 	})(jQuery);
 
-/***/ },
+/***/ }),
 /* 26 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('languageSwitcher', function (app) {
 	    'use strict';
@@ -19879,9 +19879,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 27 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('navMenuTabs', function (app) {
 	    'use strict';
@@ -20167,9 +20167,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 28 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('showVideoInfo', function (app) {
 	    'use strict';
@@ -20198,9 +20198,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 29 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('smilesAndFavouritePicturesTogether', function (app) {
 	    'use strict';
@@ -20290,9 +20290,9 @@
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 30 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('smiles', function (app) {
 	    'use strict';
@@ -20385,9 +20385,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 31 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('themes', function (app, settings) {
 	    'use strict';
@@ -20568,9 +20568,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 32 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('uiRussianTranslate', function (app) {
 	    'use strict';
@@ -20736,9 +20736,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 33 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('videoControls', function (app, settings) {
 	    'use strict';
@@ -20958,9 +20958,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 34 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('videoResize', function (app, settings) {
 	    'use strict';
@@ -21087,9 +21087,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 35 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Fork of https://github.com/mickey/videojs-progressTips
@@ -21152,9 +21152,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 36 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -21165,9 +21165,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 37 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -21178,9 +21178,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 38 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -21192,9 +21192,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 39 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
 	    extraModules.add({
@@ -21206,9 +21206,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 40 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
 	    extraModules.add({
@@ -21220,9 +21220,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 41 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
 	    extraModules.add({
@@ -21234,9 +21234,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 42 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*
 	 * Authors: RitE, Pirate505
@@ -21251,5 +21251,5 @@
 	    });
 	});
 
-/***/ }
+/***/ })
 /******/ ]);

@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
 	__webpack_require__(2);
@@ -78,178 +78,13 @@
 	__webpack_require__(37);
 	__webpack_require__(38);
 	__webpack_require__(39);
-	module.exports = __webpack_require__(40);
+	__webpack_require__(40);
+	module.exports = __webpack_require__(41);
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
-
-	window.CytubeEnhancedHelpers = function (app) {
-	    var that = this;
-
-	    /**
-	     * Returns viewport size
-	     * @returns {{width: number, height: number}}
-	     */
-	    this.getViewportSize = function () {
-	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-	        return {
-	            width: width,
-	            height: height
-	        };
-	    };
-
-	    /**
-	     * Adds the text to chat input
-	     * @param message The text to add.
-	     * @param position The position of the adding. It can be 'begin' or 'end'.
-	     */
-	    this.addMessageToChatInput = function (message, position) {
-	        var $chatline = $(chatline);
-	        position = position || 'end';
-
-	        if (position === 'begin') {
-	            message = message + $chatline.val();
-	        } else {
-	            message = $chatline.val() + message;
-	        }
-
-	        $chatline.val(message).focus();
-	    };
-	};
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
-	    var that = this;
-	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
-	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
-
-	    /**
-	     * Default data (set up by setDefault method)
-	     * @type {{}}
-	     */
-	    var defaultData = {};
-	    /**
-	     * Not dirty data
-	     * @type {{}}
-	     */
-	    var initialData = {};
-	    /**
-	     * Data
-	     * @type {{}}
-	     */
-	    var data = {};
-
-	    try {
-	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
-	        data = _.isPlainObject(data) ? data : {};
-	    } catch (error) {
-	        data = {};
-	    }
-	    initialData = _.cloneDeep(data);
-
-
-	    this.getDefault = function (name) {
-	        return defaultData[name];
-	    };
-
-
-	    this.setDefault = function (name, value) {
-	        value = _.cloneDeep(value);
-
-	        defaultData[name] = value;
-	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
-	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
-	    };
-
-
-	    this.get = function (name) {
-	        return data[name];
-	    };
-
-
-	    this.set = function (name, value) {
-	        var result = data[name] = _.cloneDeep(value);
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Toggles boolean option
-	     * @param name Boolean option's name
-	     * @returns {boolean}
-	     */
-	    this.toggle = function (name) {
-	        var result = data[name] = !data[name];
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Checks if attribute was changed
-	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
-	     * @returns {boolean}
-	     */
-	    this.isDirty = function (nameData) {
-	        var isDirty = false;
-
-	        if (_.isArray(nameData)) {
-	            for (var name in nameData) {
-	                if (!isEqual(data[name], initialData[name])) {
-	                    isDirty = true;
-	                    break;
-	                }
-	            }
-	        } else {
-	            isDirty = !isEqual(data[nameData], initialData[nameData]);
-	        }
-
-	        return isDirty;
-	    };
-
-
-	    this.save = function () {
-	        try {
-	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
-	        } catch (error) {
-	            return false;
-	        }
-	    };
-
-
-	    this.reset = function () {
-	        data = _.cloneDeep(defaultData);
-	    };
-
-
-	    var isEqual = function (value1, value2) {
-	        if (_.isArray(value1) && _.isArray(value2)) {
-	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
-	        } else {
-	            return _.isEqual(value1, value2);
-	        }
-	    };
-	};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUISettings = function (app) {
 	    'use strict';
@@ -318,8 +153,10 @@
 	        that.storage.save();
 
 	        if (pageReloadRequested) {
-	            app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function () {
-	                window.location.reload();
+	            app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function (isComfirmed) {
+	                if (isComfirmed) {
+	                    window.location.reload();
+	                }
 	            });
 	        }
 	    };
@@ -331,8 +168,10 @@
 	    this.reset = function () {
 	        that.storage.reset();
 
-	        app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function () {
-	            window.location.reload();
+	        app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function (isComfirmed) {
+	            if (isComfirmed) {
+	                window.location.reload();
+	            }
 	        });
 	    };
 
@@ -470,9 +309,9 @@
 	    };
 	};
 
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUITab = function (app, name, title, sort) {
 	    'use strict';
@@ -580,9 +419,9 @@
 	    };
 	};
 
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
 
 	window.CytubeEnhancedUI = function (app) {
 	    var that = this;
@@ -630,11 +469,11 @@
 	            $('<div class="modal-footer">').append($footerContent).appendTo($content);
 	        }
 
-	        if (!cache) {
-	            $outer.on('hidden.bs.modal', function () {
+	        $outer.on('hidden.bs.modal', function () {
+	            if (!cache) {
 	                $(this).remove();
-	            });
-	        }
+	            }
+	        });
 
 	        $outer.modal({keyboard: true});
 
@@ -642,16 +481,23 @@
 	    };
 
 
+	    /**
+	     * Creates confirm window
+	     * @param {string} message Confirm message
+	     * @param {function} callback Called after user decision. It has one boolean param isConfirmed
+	     */
 	    this.createConfirmWindow = function (message, callback) {
+	        var isConfirmed = false;
 	        var $outer = $('<div class="modal fade ' + app.prefix + 'modal-confirm modal-centered" role="dialog" tabindex="-1">').appendTo($("body"));
 	        var $modal = $('<div class="modal-dialog modal-sm">').appendTo($outer);
 	        var $content = $('<div class="modal-content">').appendTo($modal);
 
-	        $('<div class="modal-header">').html($('<h3 class="modal-title">').text(message)).appendTo($content);
+	        $('<div class="modal-header">').html($('<h3 class="modal-title">').html(message)).appendTo($content);
 
 	        var $footer = $('<div class="modal-footer">').appendTo($content);
-	        $('<button type="button" data-dismiss="modal" class="btn btn-default">' + app.t('Confirm') + '</button>').appendTo($footer).on('click', function () {
-	            callback();
+	        $('<button type="button" class="btn btn-default">' + app.t('Confirm') + '</button>').appendTo($footer).on('click', function () {
+	            isConfirmed = true;
+	            $outer.modal('hide');
 	        });
 	        $('<button type="button" data-dismiss="modal" class="' + app.prefix + 'user-settings btn btn-default">' + app.t('Cancel') + '</button>').appendTo($footer);
 
@@ -661,6 +507,41 @@
 	        });
 
 	        $outer.on('hidden.bs.modal', function () {
+	            if (_.isFunction(callback)) {
+	                callback(isConfirmed);
+	            }
+	            $(this).remove();
+	        });
+
+
+	        $outer.modal({keyboard: true});
+	    };
+
+
+	    /**
+	     * Creates alert window
+	     * @param {string} message Alert message
+	     * @param {function} [callback] Called after closing alert.
+	     */
+	    this.createAlertWindow = function (message, callback) {
+	        var $outer = $('<div class="modal fade ' + app.prefix + 'modal-confirm modal-centered" role="dialog" tabindex="-1">').appendTo($("body"));
+	        var $modal = $('<div class="modal-dialog modal-sm">').appendTo($outer);
+	        var $content = $('<div class="modal-content">').appendTo($modal);
+
+	        $('<div class="modal-header">').html($('<h3 class="modal-title">').html(message)).appendTo($content);
+
+	        var $footer = $('<div class="modal-footer">').appendTo($content);
+	        $('<button type="button" data-dismiss="modal" class="btn btn-default">' + app.t('OK') + '</button>').appendTo($footer);
+
+
+	        $outer.on('shown.bs.modal', function () {
+	            that.centerModals($(this));
+	        });
+
+	        $outer.on('hidden.bs.modal', function () {
+	            if (_.isFunction(callback)) {
+	                callback();
+	            }
 	            $(this).remove();
 	        });
 
@@ -787,9 +668,175 @@
 	    });
 	};
 
-/***/ },
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedHelpers = function (app) {
+	    var that = this;
+
+	    /**
+	     * Returns viewport size
+	     * @returns {{width: number, height: number}}
+	     */
+	    this.getViewportSize = function () {
+	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	        return {
+	            width: width,
+	            height: height
+	        };
+	    };
+
+	    /**
+	     * Adds the text to chat input
+	     * @param message The text to add.
+	     * @param position The position of the adding. It can be 'begin' or 'end'.
+	     */
+	    this.addMessageToChatInput = function (message, position) {
+	        var $chatline = $(chatline);
+	        position = position || 'end';
+
+	        if (position === 'begin') {
+	            message = message + $chatline.val();
+	        } else {
+	            message = $chatline.val() + message;
+	        }
+
+	        $chatline.val(message).focus();
+	    };
+	};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
+	    var that = this;
+	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
+	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
+
+	    /**
+	     * Default data (set up by setDefault method)
+	     * @type {{}}
+	     */
+	    var defaultData = {};
+	    /**
+	     * Not dirty data
+	     * @type {{}}
+	     */
+	    var initialData = {};
+	    /**
+	     * Data
+	     * @type {{}}
+	     */
+	    var data = {};
+
+	    try {
+	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
+	        data = _.isPlainObject(data) ? data : {};
+	    } catch (error) {
+	        data = {};
+	    }
+	    initialData = _.cloneDeep(data);
+
+
+	    this.getDefault = function (name) {
+	        return defaultData[name];
+	    };
+
+
+	    this.setDefault = function (name, value) {
+	        value = _.cloneDeep(value);
+
+	        defaultData[name] = value;
+	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
+	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
+	    };
+
+
+	    this.get = function (name) {
+	        return data[name];
+	    };
+
+
+	    this.set = function (name, value) {
+	        var result = data[name] = _.cloneDeep(value);
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Toggles boolean option
+	     * @param name Boolean option's name
+	     * @returns {boolean}
+	     */
+	    this.toggle = function (name) {
+	        var result = data[name] = !data[name];
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Checks if attribute was changed
+	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
+	     * @returns {boolean}
+	     */
+	    this.isDirty = function (nameData) {
+	        var isDirty = false;
+
+	        if (_.isArray(nameData)) {
+	            for (var name in nameData) {
+	                if (!isEqual(data[name], initialData[name])) {
+	                    isDirty = true;
+	                    break;
+	                }
+	            }
+	        } else {
+	            isDirty = !isEqual(data[nameData], initialData[nameData]);
+	        }
+
+	        return isDirty;
+	    };
+
+
+	    this.save = function () {
+	        try {
+	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
+	        } catch (error) {
+	            return false;
+	        }
+	    };
+
+
+	    this.reset = function () {
+	        data = _.cloneDeep(defaultData);
+	    };
+
+
+	    var isEqual = function (value1, value2) {
+	        if (_.isArray(value1) && _.isArray(value2)) {
+	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
+	        } else {
+	            return _.isEqual(value1, value2);
+	        }
+	    };
+	};
+
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(7);
 	window.CytubeEnhanced = function(language, modulesSettings, modulesExtends) {
@@ -798,7 +845,7 @@
 
 	    this.translations = {};
 	    this.prefix = 'ce-';
-	    this.version = '2.7.0';
+	    this.version = '2.8.0';
 
 	    var modules = {};
 	    var MODULE_LOAD_TIMEOUT = 60000; //ms (1 minute)
@@ -977,9 +1024,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
 	 * @license
@@ -17132,9 +17179,9 @@
 	}.call(this));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module), (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = function(module) {
 		if(!module.webpackPolyfill) {
@@ -17148,9 +17195,9 @@
 	}
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced = new window.CytubeEnhanced(
 	    (window.cytubeEnhancedSettings ? (window.cytubeEnhancedSettings.language || 'en') : 'en'),
@@ -17158,9 +17205,9 @@
 	    (window.cytubeEnhancedSettings ? (window.cytubeEnhancedSettings.modulesExtends || {}) : {})
 	);
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('additionalChatCommands', function (app, settings) {
 	    'use strict';
@@ -17440,7 +17487,11 @@
 
 	            return;
 	        } else if(e.keyCode === 9) { // Tab completion
-	            window.chatTabComplete();
+	            try {
+	                window.chatTabComplete();
+	            } catch (error) {
+	                console.error(error);
+	            }
 	            e.preventDefault();
 	            return false;
 	        } else if(e.keyCode === 38) { // Up arrow (input history)
@@ -17476,9 +17527,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(12);
 	window.cytubeEnhanced.addModule('bbCodesHelper', function (app, settings) {
@@ -17599,9 +17650,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery.selection - jQuery Plugin
@@ -17959,9 +18010,9 @@
 	})(jQuery, window, window.document);
 
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatAvatars', function (app, settings) {
 	    'use strict';
@@ -18113,9 +18164,9 @@
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatCommandsHelp', function (app, settings) {
 	    'use strict';
@@ -18184,9 +18235,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatControls', function (app, settings) {
 	    'use strict';
@@ -18266,9 +18317,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*
 	TODO: keep pm messages, add ability to user to specify settings, ignore users
@@ -18314,7 +18365,7 @@
 
 	        var day = time.getDate();
 	        day = day < 10 ? ('0' + day) : day;
-	        var month = time.getMonth();
+	        var month = time.getMonth() + 1;
 	        month = month < 10 ? ('0' + month) : month;
 	        var year = time.getFullYear();
 	        var hours = time.getHours();
@@ -18327,11 +18378,11 @@
 	        var timeString = day + '.' + month + '.' + year + ' ' + hours + ':' + minutes + ':' + seconds;
 
 
-
-	        $messageWrapper.append($('<div class="pm-history-message-time">[' + timeString + ']</div>'));
-	        $messageWrapper.append($('<div class="pm-history-message-username">' + data.username + '</div>'));
-	        $messageWrapper.append($('<div class="pm-history-message-content">' + data.msg + '</div>'));
-
+	        if (data.username !== "[server]") {
+	            $messageWrapper.append($('<div class="pm-history-message-time">[' + timeString + ']</div>'));
+	            $messageWrapper.append($('<div class="pm-history-message-username">' + data.username + '</div>'));
+	            $messageWrapper.append($('<div class="pm-history-message-content">' + data.msg + '</div>'));
+	        }
 
 	        return $messageWrapper;
 	    };
@@ -18381,9 +18432,9 @@
 	    };
 	});
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('common', function (app, settings) {
 	    'use strict';
@@ -18396,83 +18447,6 @@
 
 	    this.$chatline = $("#chatline");
 	    this.$userlist = $("#userlist");
-
-
-	    window.chatTabComplete = function () {
-	        var i;
-	        var words = that.$chatline.val().split(" ");
-	        var current = words[words.length - 1].toLowerCase();
-	        if (!current.match(/^[\wа-яА-ЯёЁ-]{1,20}$/)) {
-	            return;
-	        }
-
-	        var __slice = Array.prototype.slice;
-	        var usersWithCap = __slice.call(that.$userlist.find('.userlist_item')).map(function (elem) {
-	            return elem.children[1].innerHTML;
-	        });
-	        var users = __slice.call(usersWithCap).map(function (user) {
-	            return user.toLowerCase();
-	        }).filter(function (name) {
-	            return name.indexOf(current) === 0;
-	        });
-
-	        // users now contains a list of names that start with current word
-
-	        if (users.length === 0) {
-	            return;
-	        }
-
-	        // trim possible names to the shortest possible completion
-	        var min = Math.min.apply(Math, users.map(function (name) {
-	            return name.length;
-	        }));
-	        users = users.map(function (name) {
-	            return name.substring(0, min);
-	        });
-
-	        // continually trim off letters until all prefixes are the same
-	        var changed = true;
-	        var iter = 21;
-	        while (changed) {
-	            changed = false;
-	            var first = users[0];
-	            for (i = 1; i < users.length; i++) {
-	                if (users[i] !== first) {
-	                    changed = true;
-	                    break;
-	                }
-	            }
-
-	            if (changed) {
-	                users = users.map(function (name) {
-	                    return name.substring(0, name.length - 1);
-	                });
-	            }
-
-	            // In the event something above doesn't generate a break condition, limit
-	            // the maximum number of repetitions
-	            if (--iter < 0) {
-	                break;
-	            }
-	        }
-
-	        current = users[0].substring(0, min);
-	        for (i = 0; i < usersWithCap.length; i++) {
-	            if (usersWithCap[i].toLowerCase() === current) {
-	                current = usersWithCap[i];
-	                break;
-	            }
-	        }
-
-	        if (users.length === 1) {
-	            if (words.length === 1) {
-	                current += ":";
-	            }
-	            current += " ";
-	        }
-	        words[words.length - 1] = current;
-	        that.$chatline.val(words.join(" "));
-	    };
 
 
 	    if (settings.insertUsernameOnClick) {
@@ -18520,9 +18494,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('customCss', function (app, settings) {
 	    'use strict';
@@ -18615,9 +18589,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('customJs', function (app, settings) {
 	    'use strict';
@@ -18708,9 +18682,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('extras', function (app, settings) {
 	    'use strict';
@@ -18841,9 +18815,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 21 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('favouritePictures', function (app) {
 	    'use strict';
@@ -18933,7 +18907,7 @@
 	        return that.entityMap[symbol];
 	    };
 	    this.renderFavouritePictures = function () {
-	        var favouritePictures = app.storage.get('favouritePictures');
+	        var favouritePictures = app.storage.get('favouritePictures') || [];
 
 	        this.$favouritePicturesBodyPanel.empty();
 
@@ -18984,8 +18958,9 @@
 
 
 	    this.addFavouritePicture = function (imageUrl) {
+	        imageUrl = _.trim(imageUrl);
 	        if (imageUrl !== '') {
-	            var favouritePictures = app.storage.get('favouritePictures');
+	            var favouritePictures = app.storage.get('favouritePictures') || [];
 
 	            if (favouritePictures.indexOf(imageUrl) === -1) {
 	                if (imageUrl !== '') {
@@ -19041,7 +19016,7 @@
 	    this.exportPictures = function () {
 	        var $downloadLink = $('<a>')
 	            .attr({
-	                href: 'data:text/plain;charset=utf-8,' + encodeURIComponent(app.toJSON(app.storage.get('favouritePictures'))),
+	                href: 'data:text/plain;charset=utf-8,' + encodeURIComponent(app.toJSON(app.storage.get('favouritePictures') || [])),
 	                download: 'cytube_enhanced_favourite_images.txt'
 	            })
 	            .hide()
@@ -19060,14 +19035,23 @@
 	        var favouritePicturesAddressesReader = new FileReader();
 
 	        favouritePicturesAddressesReader.addEventListener('load', function(e) {
-	            app.storage.set('favouritePictures', app.parseJSON(e.target.result));
-
-	            that.renderFavouritePictures();
+	            var pictures = app.parseJSON(e.target.result);
+	            if (_.isArray(pictures)) {
+	                app.storage.set('favouritePictures', app.parseJSON(e.target.result));
+	                that.renderFavouritePictures();
+	            } else {
+	                app.UI.createAlertWindow(app.t('favPics[.]Can\'t detect any pictures in this file.'));
+	            }
 	        });
 	        favouritePicturesAddressesReader.readAsText(importFile);
 	    };
 	    $('#import-pictures').on('change', function () {
-	        that.importPictures($(this)[0].files[0]);
+	        var file = $(this)[0].files[0];
+	        app.UI.createConfirmWindow(app.t('favPics[.]Your old pictures will be removed and replaced with the images from uploaded file (file must correspond to format of the file from export button of this panel).<br>Are you sure you want to continue?'), function (isConfirmed) {
+	            if (isConfirmed && file) {
+	                that.importPictures(file);
+	            }
+	        });
 	    });
 
 
@@ -19123,11 +19107,11 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 22 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(23);
+	__webpack_require__(23)($);
 	__webpack_require__(24);
 	window.cytubeEnhanced.addModule('imagePreview', function (app, settings) {
 	    'use strict';
@@ -19243,9 +19227,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 23 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery Mousewheel 3.1.13
@@ -19470,9 +19454,9 @@
 	}));
 
 
-/***/ },
+/***/ }),
 /* 24 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 * jQuery UI Touch Punch 0.2.3
@@ -19655,9 +19639,9 @@
 
 	})(jQuery);
 
-/***/ },
+/***/ }),
 /* 25 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('languageSwitcher', function (app) {
 	    'use strict';
@@ -19693,9 +19677,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 26 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('navMenuTabs', function (app) {
 	    'use strict';
@@ -19981,9 +19965,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 27 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('showVideoInfo', function (app) {
 	    'use strict';
@@ -20012,9 +19996,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 28 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('smilesAndFavouritePicturesTogether', function (app) {
 	    'use strict';
@@ -20104,9 +20088,9 @@
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 29 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('smiles', function (app) {
 	    'use strict';
@@ -20199,16 +20183,16 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 30 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('themes', function (app, settings) {
 	    'use strict';
 	    var that = this;
 
 	    var defaultSettings = {
-	        defaultTheme: 'default', //default theme for user (until user do not change it)
+	        defaultTheme: 'halloween', //default theme for user (until user do not change it)
 	        themeId: 'theme-css' //node id in DOM
 	    };
 	    settings = $.extend({}, defaultSettings, settings);
@@ -20234,7 +20218,6 @@
 	    //if settings.defaultTheme was changed by administrator ask user if he want to switch on it
 	    this.applyNewDefaultTheme = function () {
 	        var previousDefaultTheme = userSettings.get(namespace + '.previousDefaultTheme');
-
 	        if (userSettings.get(namespace + '.selected') == previousDefaultTheme) {
 	            userSettings.set(namespace + '.previousDefaultTheme', settings.defaultTheme);
 	            that.setTheme(settings.defaultTheme);
@@ -20247,12 +20230,16 @@
 
 	            if (settings.defaultTheme != userSettings.get(namespace + '.selected')) {
 	                var themeTitle = that.themes[settings.defaultTheme].title;
-	                app.UI.createConfirmWindow(app.t('themes[.]Default theme was changed to "%themeTitle%" by administrator. Do you want to try it? (Don\'t forget, that you can switch your theme in extended settings anytime.)').replace('%themeTitle%', themeTitle), function () {
-	                    that.setTheme(settings.defaultTheme);
-	                    userSettings.save();
-	                    app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function () {
-	                        window.location.reload();
-	                    });
+	                app.UI.createConfirmWindow(app.t('themes[.]Default theme was changed to "%themeTitle%" by administrator. Do you want to try it? (Don\'t forget, that you can switch your theme in extended settings anytime.)').replace('%themeTitle%', themeTitle), function (isConfirmed) {
+	                    if (isConfirmed) {
+	                        that.setTheme(settings.defaultTheme);
+	                        userSettings.save();
+	                        app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function (isConfirmed) {
+	                            if (isConfirmed) {
+	                                window.location.reload();
+	                            }
+	                        });
+	                    }
 	                });
 	            }
 	        }
@@ -20326,8 +20313,10 @@
 	            var name = $(this).data('name');
 
 	            if (name !== userSettings.get(namespace + '.selected')) {
-	                app.UI.createConfirmWindow(app.t('themes[.]Apply this theme?'), function () {
-	                    that.setTheme(name);
+	                app.UI.createConfirmWindow(app.t('themes[.]Apply this theme?'), function (isConfirmed) {
+	                    if (isConfirmed) {
+	                        that.setTheme(name);
+	                    }
 	                });
 	            }
 	        });
@@ -20377,9 +20366,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 31 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('uiRussianTranslate', function (app) {
 	    'use strict';
@@ -20545,9 +20534,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 32 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('videoControls', function (app, settings) {
 	    'use strict';
@@ -20767,9 +20756,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 33 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('videoResize', function (app, settings) {
 	    'use strict';
@@ -20896,9 +20885,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 34 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Fork of https://github.com/mickey/videojs-progressTips
@@ -20961,9 +20950,9 @@
 	});
 
 
-/***/ },
+/***/ }),
 /* 35 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -20974,9 +20963,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 36 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -20987,9 +20976,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 37 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
 	    extraModules.add({
@@ -21001,9 +20990,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 38 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
 	    extraModules.add({
@@ -21015,9 +21004,23 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 39 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
+
+	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
+	    extraModules.add({
+	        title: 'Halloween',
+	        name: 'halloween',
+	        cssUrl: 'https://rawgit.com/kaba99/cytube-enhanced/master/themes/halloween/theme.css',
+	        jsUrl: 'https://rawgit.com/kaba99/cytube-enhanced/master/themes/halloween/theme.js',
+	        pictureUrl: 'https://rawgit.com/kaba99/cytube-enhanced/master/themes/halloween/screenshot.png'
+	    });
+	});
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
 	    extraModules.add({
@@ -21029,9 +21032,9 @@
 	    });
 	});
 
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
 
 	/*
 	 * Authors: RitE, Pirate505
@@ -21046,5 +21049,5 @@
 	    });
 	});
 
-/***/ }
+/***/ })
 /******/ ]);
