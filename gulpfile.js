@@ -7,7 +7,7 @@ var concat = require('gulp-concat');
 var rename = require("gulp-rename");
 var webpack = require('webpack-stream');
 var merge = require('merge-stream');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify-es').default;
 var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
 var jshint = require('gulp-jshint');
@@ -16,8 +16,8 @@ var sass = require('gulp-sass');
 
 
 var jsFilesGlobs = {
-    ru: ['./src/translations/ru.js', './src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-ru.js', './src/js/modules-build/**/*.js', './extras/**/config.js', './themes/**/config.js'],
-    en: ['./src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-en.js', './src/js/modules-build/**/*.js', './extras/**/config.js', './themes/**/config.js']
+    ru: ['./src/translations/ru.js', './src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-ru.js', './src/js/modules-build/**/*.js', './src/js/modules-test/**/*.js', './extras/**/config.js', './themes/**/config.js'],
+    en: ['./src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-en.js', './src/js/modules-build/**/*.js', './src/js/modules-test/**/*.js', './extras/**/config.js', './themes/**/config.js']
 };
 var cssFilesGlob = ['./src/css/main.scss'];
 var buildForLangs = ['ru', 'en'];
@@ -60,7 +60,7 @@ gulp.task('build-js', function () {
                 .pipe(rename('cytube-enhanced.js'))
                 .pipe(gulp.dest('./build/' + lang))
                 .pipe(rename('cytube-enhanced.min.js'))
-                .pipe(uglify({mangle: false, preserveComments: ''}))
+                .pipe(uglify({mangle: true}))
                 .pipe(gulp.dest('./build/'+lang));
 
             streams.push(stream);
