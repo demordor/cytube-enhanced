@@ -53,6 +53,7 @@
 	__webpack_require__(9);
 	__webpack_require__(10);
 	__webpack_require__(11);
+	__webpack_require__(12);
 	__webpack_require__(13);
 	__webpack_require__(14);
 	__webpack_require__(15);
@@ -63,27 +64,180 @@
 	__webpack_require__(20);
 	__webpack_require__(21);
 	__webpack_require__(22);
+	__webpack_require__(23);
+	__webpack_require__(24);
 	__webpack_require__(25);
-	__webpack_require__(26);
-	__webpack_require__(27);
-	__webpack_require__(28);
-	__webpack_require__(29);
-	__webpack_require__(30);
-	__webpack_require__(31);
-	__webpack_require__(32);
-	__webpack_require__(33);
-	__webpack_require__(34);
-	__webpack_require__(35);
-	__webpack_require__(36);
-	__webpack_require__(37);
-	__webpack_require__(38);
-	__webpack_require__(39);
-	__webpack_require__(40);
-	module.exports = __webpack_require__(41);
+	module.exports = __webpack_require__(26);
 
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedHelpers = function (app) {
+	    var that = this;
+
+	    /**
+	     * Returns viewport size
+	     * @returns {{width: number, height: number}}
+	     */
+	    this.getViewportSize = function () {
+	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	        return {
+	            width: width,
+	            height: height
+	        };
+	    };
+
+	    /**
+	     * Adds the text to chat input
+	     * @param message The text to add.
+	     * @param position The position of the adding. It can be 'begin' or 'end'.
+	     */
+	    this.addMessageToChatInput = function (message, position) {
+	        var $chatline = $(chatline);
+	        position = position || 'end';
+
+	        if (position === 'begin') {
+	            message = message + $chatline.val();
+	        } else {
+	            message = $chatline.val() + message;
+	        }
+
+	        $chatline.val(message).focus();
+	    };
+	};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
+	    var that = this;
+	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
+	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
+
+	    /**
+	     * Default data (set up by setDefault method)
+	     * @type {{}}
+	     */
+	    var defaultData = {};
+	    /**
+	     * Not dirty data
+	     * @type {{}}
+	     */
+	    var initialData = {};
+	    /**
+	     * Data
+	     * @type {{}}
+	     */
+	    var data = {};
+
+	    try {
+	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
+	        data = _.isPlainObject(data) ? data : {};
+	    } catch (error) {
+	        data = {};
+	    }
+	    initialData = _.cloneDeep(data);
+
+
+	    this.getDefault = function (name) {
+	        return defaultData[name];
+	    };
+
+
+	    this.setDefault = function (name, value) {
+	        value = _.cloneDeep(value);
+
+	        defaultData[name] = value;
+	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
+	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
+	    };
+
+
+	    this.get = function (name) {
+	        return data[name];
+	    };
+
+
+	    this.set = function (name, value) {
+	        var result = data[name] = _.cloneDeep(value);
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Toggles boolean option
+	     * @param name Boolean option's name
+	     * @returns {boolean}
+	     */
+	    this.toggle = function (name) {
+	        var result = data[name] = !data[name];
+
+	        if (autoSave) {
+	            that.save();
+	        }
+
+	        return result;
+	    };
+
+
+	    /**
+	     * Checks if attribute was changed
+	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
+	     * @returns {boolean}
+	     */
+	    this.isDirty = function (nameData) {
+	        var isDirty = false;
+
+	        if (_.isArray(nameData)) {
+	            for (var name in nameData) {
+	                if (!isEqual(data[name], initialData[name])) {
+	                    isDirty = true;
+	                    break;
+	                }
+	            }
+	        } else {
+	            isDirty = !isEqual(data[nameData], initialData[nameData]);
+	        }
+
+	        return isDirty;
+	    };
+
+
+	    this.save = function () {
+	        try {
+	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
+	        } catch (error) {
+	            return false;
+	        }
+	    };
+
+
+	    this.reset = function () {
+	        data = _.cloneDeep(defaultData);
+	    };
+
+
+	    var isEqual = function (value1, value2) {
+	        if (_.isArray(value1) && _.isArray(value2)) {
+	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
+	        } else {
+	            return _.isEqual(value1, value2);
+	        }
+	    };
+	};
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 	window.CytubeEnhancedUISettings = function (app) {
@@ -310,7 +464,7 @@
 	};
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports) {
 
 	window.CytubeEnhancedUITab = function (app, name, title, sort) {
@@ -420,7 +574,7 @@
 	};
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	window.CytubeEnhancedUI = function (app) {
@@ -666,172 +820,6 @@
 	    $(window).resize(function () {
 	        that.centerModals();
 	    });
-	};
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-	window.CytubeEnhancedHelpers = function (app) {
-	    var that = this;
-
-	    /**
-	     * Returns viewport size
-	     * @returns {{width: number, height: number}}
-	     */
-	    this.getViewportSize = function () {
-	        var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	        var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-	        return {
-	            width: width,
-	            height: height
-	        };
-	    };
-
-	    /**
-	     * Adds the text to chat input
-	     * @param message The text to add.
-	     * @param position The position of the adding. It can be 'begin' or 'end'.
-	     */
-	    this.addMessageToChatInput = function (message, position) {
-	        var $chatline = $(chatline);
-	        position = position || 'end';
-
-	        if (position === 'begin') {
-	            message = message + $chatline.val();
-	        } else {
-	            message = $chatline.val() + message;
-	        }
-
-	        $chatline.val(message).focus();
-	    };
-	};
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-	window.CytubeEnhancedStorage = function (storageName, isGlobal, autoSave) {
-	    var that = this;
-	    isGlobal = (typeof isGlobal !== 'undefined') ? isGlobal : true;
-	    autoSave = (typeof autoSave !== 'undefined') ? autoSave : false;
-
-	    /**
-	     * Default data (set up by setDefault method)
-	     * @type {{}}
-	     */
-	    var defaultData = {};
-	    /**
-	     * Not dirty data
-	     * @type {{}}
-	     */
-	    var initialData = {};
-	    /**
-	     * Data
-	     * @type {{}}
-	     */
-	    var data = {};
-
-	    try {
-	        data = JSON.parse(window.localStorage.getItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName));
-	        data = _.isPlainObject(data) ? data : {};
-	    } catch (error) {
-	        data = {};
-	    }
-	    initialData = _.cloneDeep(data);
-
-
-	    this.getDefault = function (name) {
-	        return defaultData[name];
-	    };
-
-
-	    this.setDefault = function (name, value) {
-	        value = _.cloneDeep(value);
-
-	        defaultData[name] = value;
-	        data[name] = (typeof data[name] !== 'undefined') ? data[name] : value;
-	        initialData[name] = (typeof initialData[name] !== 'undefined') ? initialData[name] : value;
-	    };
-
-
-	    this.get = function (name) {
-	        return data[name];
-	    };
-
-
-	    this.set = function (name, value) {
-	        var result = data[name] = _.cloneDeep(value);
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Toggles boolean option
-	     * @param name Boolean option's name
-	     * @returns {boolean}
-	     */
-	    this.toggle = function (name) {
-	        var result = data[name] = !data[name];
-
-	        if (autoSave) {
-	            that.save();
-	        }
-
-	        return result;
-	    };
-
-
-	    /**
-	     * Checks if attribute was changed
-	     * @param {String|Array} nameData Name of the attribute (you can pass array of names)
-	     * @returns {boolean}
-	     */
-	    this.isDirty = function (nameData) {
-	        var isDirty = false;
-
-	        if (_.isArray(nameData)) {
-	            for (var name in nameData) {
-	                if (!isEqual(data[name], initialData[name])) {
-	                    isDirty = true;
-	                    break;
-	                }
-	            }
-	        } else {
-	            isDirty = !isEqual(data[nameData], initialData[nameData]);
-	        }
-
-	        return isDirty;
-	    };
-
-
-	    this.save = function () {
-	        try {
-	            return window.localStorage.setItem(storageName + '-' + (isGlobal ? '' : CHANNEL.name) + storageName, JSON.stringify(data));
-	        } catch (error) {
-	            return false;
-	        }
-	    };
-
-
-	    this.reset = function () {
-	        data = _.cloneDeep(defaultData);
-	    };
-
-
-	    var isEqual = function (value1, value2) {
-	        if (_.isArray(value1) && _.isArray(value2)) {
-	            return (_.difference(value1, value2).length === 0 && _.difference(value2, value1).length === 0);
-	        } else {
-	            return _.isEqual(value1, value2);
-	        }
-	    };
 	};
 
 /***/ }),
@@ -17529,489 +17517,6 @@
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	__webpack_require__(12);
-	window.cytubeEnhanced.addModule('bbCodesHelper', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        templateButtons: ['b', 'i', 'sp', 'code', 's'],
-	        templateButtonsAnimationSpeed: 150
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-
-	    if ($('#chat-controls').length === 0) {
-	        $('<div id="chat-controls" class="btn-group">').appendTo("#chatwrap");
-	    }
-
-
-	    this.handleMarkdownHelperBtnClick = function ($markdownHelperBtn, $markdownTemplatesWrapper) {
-	        if ($markdownHelperBtn.hasClass('btn-default')) { //closed
-	            $markdownHelperBtn.removeClass('btn-default');
-	            $markdownHelperBtn.addClass('btn-success');
-
-	            $markdownTemplatesWrapper.show();
-	            $markdownTemplatesWrapper.children().animate({left: 0}, settings.templateButtonsAnimationSpeed);
-	        } else { //opened
-	            $markdownHelperBtn.removeClass('btn-success');
-	            $markdownHelperBtn.addClass('btn-default');
-
-	            $markdownTemplatesWrapper.children().animate({left: -$markdownTemplatesWrapper.width()}, settings.templateButtonsAnimationSpeed, function () {
-	                $markdownTemplatesWrapper.hide();
-	            });
-	        }
-	    };
-
-	    this.$markdownHelperBtn = $('<button id="markdown-helper-btn" type="button" class="btn btn-sm btn-default" title="' + app.t('markdown[.]Markdown helper') + '">')
-	        .html('<i class="glyphicon glyphicon-font"></i>')
-	        .on('click', function () {
-	            that.handleMarkdownHelperBtnClick($(this), that.$markdownTemplatesWrapper);
-
-	            app.storage.toggle('bb-codes-opened');
-	        });
-
-	    if ($('#chat-help-btn').length !== 0) {
-	        this.$markdownHelperBtn.insertBefore('#chat-help-btn');
-	    } else {
-	        this.$markdownHelperBtn.appendTo('#chat-controls');
-	    }
-
-
-	    this.$markdownTemplatesWrapper = $('<div class="btn-group markdown-helper-templates-wrapper">')
-	        .insertAfter(this.$markdownHelperBtn)
-	        .hide();
-
-	    if (app.storage.get('bb-codes-opened')) {
-	        this.handleMarkdownHelperBtnClick(this.$markdownHelperBtn, this.$markdownTemplatesWrapper);
-	    }
-
-
-	    /**
-	     * Markdown templates
-	     *
-	     * To add your template you need to also add your template key into settings.templateButtons
-	     * @type {object}
-	     */
-	    this.markdownTemplates = {
-	        'b': {
-	            text: '<b>B</b>',
-	            title: app.t('markdown[.]Bold text')
-	        },
-	        'i': {
-	            text: '<i>I</i>',
-	            title: app.t('markdown[.]Cursive text')
-	        },
-	        'sp': {
-	            text: 'SP',
-	            title: app.t('markdown[.]Spoiler')
-	        },
-	        'code': {
-	            text: '<code>CODE</code>',
-	            title: app.t('markdown[.]Monospace')
-	        },
-	        's': {
-	            text: '<s>S</s>',
-	            title: app.t('markdown[.]Strike')
-	        }
-	    };
-
-	    var template;
-	    for (var templateIndex = 0, templatesLength = settings.templateButtons.length; templateIndex < templatesLength; templateIndex++) {
-	        template = settings.templateButtons[templateIndex];
-
-	        $('<button type="button" class="btn btn-sm btn-default" title="' + this.markdownTemplates[template].title + '">')
-	            .html(this.markdownTemplates[template].text)
-	            .data('template', template)
-	            .appendTo(this.$markdownTemplatesWrapper);
-	    }
-
-
-	    this.handleMarkdown = function (templateType) {
-	        if (this.markdownTemplates.hasOwnProperty(templateType)) {
-	            $('#chatline')
-	                .selection('insert', {
-	                    text: '[' + templateType + ']',
-	                    mode: 'before'
-	                })
-	                .selection('insert', {
-	                    text: '[/' + templateType + ']',
-	                    mode: 'after'
-	                });
-	        }
-	    };
-	    this.$markdownTemplatesWrapper.on('click', 'button', function () {
-	        that.handleMarkdown($(this).data('template'));
-
-	        return false;
-	    });
-	});
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-	/*!
-	 * jQuery.selection - jQuery Plugin
-	 *
-	 * Copyright (c) 2010-2014 IWASAKI Koji (@madapaja).
-	 * http://blog.madapaja.net/
-	 * Under The MIT License
-	 *
-	 * Permission is hereby granted, free of charge, to any person obtaining
-	 * a copy of this software and associated documentation files (the
-	 * "Software"), to deal in the Software without restriction, including
-	 * without limitation the rights to use, copy, modify, merge, publish,
-	 * distribute, sublicense, and/or sell copies of the Software, and to
-	 * permit persons to whom the Software is furnished to do so, subject to
-	 * the following conditions:
-	 *
-	 * The above copyright notice and this permission notice shall be
-	 * included in all copies or substantial portions of the Software.
-	 *
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-	 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	 * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-	 * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-	 * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-	 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-	 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-	 */
-	(function($, win, doc) {
-	    /**
-	     * get caret status of the selection of the element
-	     *
-	     * @param   {Element}   element         target DOM element
-	     * @return  {Object}    return
-	     * @return  {String}    return.text     selected text
-	     * @return  {Number}    return.start    start position of the selection
-	     * @return  {Number}    return.end      end position of the selection
-	     */
-	    var _getCaretInfo = function(element){
-	        var res = {
-	            text: '',
-	            start: 0,
-	            end: 0
-	        };
-
-	        if (!element.value) {
-	            /* no value or empty string */
-	            return res;
-	        }
-
-	        try {
-	            if (win.getSelection) {
-	                /* except IE */
-	                res.start = element.selectionStart;
-	                res.end = element.selectionEnd;
-	                res.text = element.value.slice(res.start, res.end);
-	            } else if (doc.selection) {
-	                /* for IE */
-	                element.focus();
-
-	                var range = doc.selection.createRange(),
-	                    range2 = doc.body.createTextRange();
-
-	                res.text = range.text;
-
-	                try {
-	                    range2.moveToElementText(element);
-	                    range2.setEndPoint('StartToStart', range);
-	                } catch (e) {
-	                    range2 = element.createTextRange();
-	                    range2.setEndPoint('StartToStart', range);
-	                }
-
-	                res.start = element.value.length - range2.text.length;
-	                res.end = res.start + range.text.length;
-	            }
-	        } catch (e) {
-	            /* give up */
-	        }
-
-	        return res;
-	    };
-
-	    /**
-	     * caret operation for the element
-	     * @type {Object}
-	     */
-	    var _CaretOperation = {
-	        /**
-	         * get caret position
-	         *
-	         * @param   {Element}   element         target element
-	         * @return  {Object}    return
-	         * @return  {Number}    return.start    start position for the selection
-	         * @return  {Number}    return.end      end position for the selection
-	         */
-	        getPos: function(element) {
-	            var tmp = _getCaretInfo(element);
-	            return {start: tmp.start, end: tmp.end};
-	        },
-
-	        /**
-	         * set caret position
-	         *
-	         * @param   {Element}   element         target element
-	         * @param   {Object}    toRange         caret position
-	         * @param   {Number}    toRange.start   start position for the selection
-	         * @param   {Number}    toRange.end     end position for the selection
-	         * @param   {String}    caret           caret mode: any of the following: "keep" | "start" | "end"
-	         */
-	        setPos: function(element, toRange, caret) {
-	            caret = this._caretMode(caret);
-
-	            if (caret === 'start') {
-	                toRange.end = toRange.start;
-	            } else if (caret === 'end') {
-	                toRange.start = toRange.end;
-	            }
-
-	            element.focus();
-	            try {
-	                if (element.createTextRange) {
-	                    var range = element.createTextRange();
-
-	                    if (win.navigator.userAgent.toLowerCase().indexOf("msie") >= 0) {
-	                        toRange.start = element.value.substr(0, toRange.start).replace(/\r/g, '').length;
-	                        toRange.end = element.value.substr(0, toRange.end).replace(/\r/g, '').length;
-	                    }
-
-	                    range.collapse(true);
-	                    range.moveStart('character', toRange.start);
-	                    range.moveEnd('character', toRange.end - toRange.start);
-
-	                    range.select();
-	                } else if (element.setSelectionRange) {
-	                    element.setSelectionRange(toRange.start, toRange.end);
-	                }
-	            } catch (e) {
-	                /* give up */
-	            }
-	        },
-
-	        /**
-	         * get selected text
-	         *
-	         * @param   {Element}   element         target element
-	         * @return  {String}    return          selected text
-	         */
-	        getText: function(element) {
-	            return _getCaretInfo(element).text;
-	        },
-
-	        /**
-	         * get caret mode
-	         *
-	         * @param   {String}    caret           caret mode
-	         * @return  {String}    return          any of the following: "keep" | "start" | "end"
-	         */
-	        _caretMode: function(caret) {
-	            caret = caret || "keep";
-	            if (caret === false) {
-	                caret = 'end';
-	            }
-
-	            switch (caret) {
-	                case 'keep':
-	                case 'start':
-	                case 'end':
-	                    break;
-
-	                default:
-	                    caret = 'keep';
-	            }
-
-	            return caret;
-	        },
-
-	        /**
-	         * replace selected text
-	         *
-	         * @param   {Element}   element         target element
-	         * @param   {String}    text            replacement text
-	         * @param   {String}    caret           caret mode: any of the following: "keep" | "start" | "end"
-	         */
-	        replace: function(element, text, caret) {
-	            var tmp = _getCaretInfo(element),
-	                orig = element.value,
-	                pos = $(element).scrollTop(),
-	                range = {start: tmp.start, end: tmp.start + text.length};
-
-	            element.value = orig.substr(0, tmp.start) + text + orig.substr(tmp.end);
-
-	            $(element).scrollTop(pos);
-	            this.setPos(element, range, caret);
-	        },
-
-	        /**
-	         * insert before the selected text
-	         *
-	         * @param   {Element}   element         target element
-	         * @param   {String}    text            insertion text
-	         * @param   {String}    caret           caret mode: any of the following: "keep" | "start" | "end"
-	         */
-	        insertBefore: function(element, text, caret) {
-	            var tmp = _getCaretInfo(element),
-	                orig = element.value,
-	                pos = $(element).scrollTop(),
-	                range = {start: tmp.start + text.length, end: tmp.end + text.length};
-
-	            element.value = orig.substr(0, tmp.start) + text + orig.substr(tmp.start);
-
-	            $(element).scrollTop(pos);
-	            this.setPos(element, range, caret);
-	        },
-
-	        /**
-	         * insert after the selected text
-	         *
-	         * @param   {Element}   element         target element
-	         * @param   {String}    text            insertion text
-	         * @param   {String}    caret           caret mode: any of the following: "keep" | "start" | "end"
-	         */
-	        insertAfter: function(element, text, caret) {
-	            var tmp = _getCaretInfo(element),
-	                orig = element.value,
-	                pos = $(element).scrollTop(),
-	                range = {start: tmp.start, end: tmp.end};
-
-	            element.value = orig.substr(0, tmp.end) + text + orig.substr(tmp.end);
-
-	            $(element).scrollTop(pos);
-	            this.setPos(element, range, caret);
-	        }
-	    };
-
-	    /* add jQuery.selection */
-	    $.extend({
-	        /**
-	         * get selected text on the window
-	         *
-	         * @param   {String}    mode            selection mode: any of the following: "text" | "html"
-	         * @return  {String}    return
-	         */
-	        selection: function(mode) {
-	            var getText = ((mode || 'text').toLowerCase() === 'text');
-
-	            try {
-	                if (win.getSelection) {
-	                    if (getText) {
-	                        // get text
-	                        return win.getSelection().toString();
-	                    } else {
-	                        // get html
-	                        var sel = win.getSelection(), range;
-
-	                        if (sel.getRangeAt) {
-	                            range = sel.getRangeAt(0);
-	                        } else {
-	                            range = doc.createRange();
-	                            range.setStart(sel.anchorNode, sel.anchorOffset);
-	                            range.setEnd(sel.focusNode, sel.focusOffset);
-	                        }
-
-	                        return $('<div></div>').append(range.cloneContents()).html();
-	                    }
-	                } else if (doc.selection) {
-	                    if (getText) {
-	                        // get text
-	                        return doc.selection.createRange().text;
-	                    } else {
-	                        // get html
-	                        return doc.selection.createRange().htmlText;
-	                    }
-	                }
-	            } catch (e) {
-	                /* give up */
-	            }
-
-	            return '';
-	        }
-	    });
-
-	    /* add selection */
-	    $.fn.extend({
-	        selection: function(mode, opts) {
-	            opts = opts || {};
-
-	            switch (mode) {
-	                /**
-	                 * selection('getPos')
-	                 * get caret position
-	                 *
-	                 * @return  {Object}    return
-	                 * @return  {Number}    return.start    start position for the selection
-	                 * @return  {Number}    return.end      end position for the selection
-	                 */
-	                case 'getPos':
-	                    return _CaretOperation.getPos(this[0]);
-
-	                /**
-	                 * selection('setPos', opts)
-	                 * set caret position
-	                 *
-	                 * @param   {Number}    opts.start      start position for the selection
-	                 * @param   {Number}    opts.end        end position for the selection
-	                 */
-	                case 'setPos':
-	                    return this.each(function() {
-	                        _CaretOperation.setPos(this, opts);
-	                    });
-
-	                /**
-	                 * selection('replace', opts)
-	                 * replace the selected text
-	                 *
-	                 * @param   {String}    opts.text            replacement text
-	                 * @param   {String}    opts.caret           caret mode: any of the following: "keep" | "start" | "end"
-	                 */
-	                case 'replace':
-	                    return this.each(function() {
-	                        _CaretOperation.replace(this, opts.text, opts.caret);
-	                    });
-
-	                /**
-	                 * selection('insert', opts)
-	                 * insert before/after the selected text
-	                 *
-	                 * @param   {String}    opts.text            insertion text
-	                 * @param   {String}    opts.caret           caret mode: any of the following: "keep" | "start" | "end"
-	                 * @param   {String}    opts.mode            insertion mode: any of the following: "before" | "after"
-	                 */
-	                case 'insert':
-	                    return this.each(function() {
-	                        if (opts.mode === 'before') {
-	                            _CaretOperation.insertBefore(this, opts.text, opts.caret);
-	                        } else {
-	                            _CaretOperation.insertAfter(this, opts.text, opts.caret);
-	                        }
-	                    });
-
-	                /**
-	                 * selection('get')
-	                 * get selected text
-	                 *
-	                 * @return  {String}    return
-	                 */
-	                case 'get':
-	                    /* falls through */
-	                default:
-	                    return _CaretOperation.getText(this[0]);
-	            }
-
-	            return this;
-	        }
-	    });
-	})(jQuery, window, window.document);
-
-
-/***/ }),
-/* 13 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatAvatars', function (app, settings) {
@@ -18165,78 +17670,7 @@
 	});
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('chatCommandsHelp', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        commands: {
-	            '/me': app.t('chatCommands[.]%username% action (e.g: <i>/me is dancing</i>)'),
-	            '/sp': app.t('chatCommands[.]spoiler'),
-	            '/afk': app.t('chatCommands[.]sets the "AFK" status')
-	        }
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-
-	    if ($('#chat-controls').length === 0) {
-	        $('<div id="chat-controls" class="btn-group">').appendTo("#chatwrap");
-	    }
-
-	    this.commands = {};
-	    this.commands[app.t('Standard commands')] = settings.commands;
-
-	    if (app.isModulePermitted('additionalChatCommands')) {
-	        app.getModule('additionalChatCommands').done(function (commandsModule) {
-	            var additionalCommands = {};
-
-	            for (var command in commandsModule.commandsList) {
-	                if (commandsModule.commandsList.hasOwnProperty(command) && commandsModule.isCommandPermitted(command) && (commandsModule.commandsList[command].isAvailable ? commandsModule.commandsList[command].isAvailable() : true)) {
-	                    additionalCommands[command] = commandsModule.commandsList[command].description || '';
-	                }
-	            }
-
-	            that.commands[app.t('Extra commands')] = additionalCommands;
-	        });
-	    }
-
-
-	    this.handleChatHelpBtn = function (commands) {
-	        var $header = $('<h3 class="modal-title">').text(app.t('The list of chat commands'));
-
-	        var $bodyWrapper = $('<div>');
-
-	        for (var commandsPart in commands) {
-	            if (commands.hasOwnProperty(commandsPart)) {
-	                $('<h3>').html(commandsPart).appendTo($bodyWrapper);
-
-	                var $ul = $('<ul>');
-	                for (var command in commands[commandsPart]) {
-	                    if (commands[commandsPart].hasOwnProperty(command)) {
-	                        $('<li>').html('<code>' + command + '</code> - ' + commands[commandsPart][command] + '.').appendTo($ul);
-	                    }
-	                }
-
-	                $ul.appendTo($bodyWrapper);
-	            }
-	        }
-
-	        app.UI.createModalWindow('chat-commands-help', $header, $bodyWrapper);
-	    };
-	    this.$chatHelpBtn = $('<button id="chat-help-btn" class="btn btn-sm btn-default">')
-	        .text(app.t('Commands list'))
-	        .appendTo('#chat-controls')
-	        .on('click', function () {
-	            that.handleChatHelpBtn(that.commands);
-	        });
-	});
-
-
-/***/ }),
-/* 15 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('chatControls', function (app, settings) {
@@ -18318,7 +17752,7 @@
 
 
 /***/ }),
-/* 16 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	/*
@@ -18433,7 +17867,7 @@
 	});
 
 /***/ }),
-/* 17 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('common', function (app, settings) {
@@ -18495,328 +17929,7 @@
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('customCss', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        aceUrl: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js'
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    var tab = app.Settings.getTab('custom-css', 'CSS', 200);
-	    var namespace = 'user-code';
-
-	    var userSettingsFromV1 = app.parseJSON(window.getOrDefault(window.CHANNEL.name + "_config-layout", undefined), {});
-	    app.Settings.storage.setDefault(namespace + '.css', (_.isPlainObject(userSettingsFromV1) && _.isString(userSettingsFromV1['user-css'])) ? userSettingsFromV1['user-css'] : '');
-
-	    var $editor = $('<textarea class="' + app.prefix + 'custom-editor-textarea"></textarea>').val(app.Settings.storage.get(namespace + '.css')).appendTo(tab.$content);
-	    var $aceEditor = $('<div class="' + app.prefix + 'custom-editor-ace" id="' + app.prefix + 'css-editor"></div>').text(app.Settings.storage.get(namespace + '.css'));
-	    var aceEditor;
-
-
-	    tab.onShow(function () {
-	        if (typeof aceEditor === 'undefined') {
-	            if (typeof window.ace === 'undefined') {
-	                if (!app.Settings.aceIsLoading && !app.Settings.aceLoadingFailed) {
-	                    app.Settings.aceIsLoading = true;
-
-	                    $.ajax({
-	                        url: settings.aceUrl,
-	                        dataType: "script",
-	                        timeout: 20000 //20 sec
-	                    }).done(function () {
-	                        that.initializeAceEditor();
-	                    }).always(function () {
-	                        app.Settings.aceIsLoading = false;
-	                        app.Settings.aceLoadingFailed = true;
-	                        tab.$content.toggleLoader('off');
-	                    });
-	                }
-
-	                if (app.Settings.aceIsLoading && !app.Settings.aceLoadingFailed) {
-	                    tab.$content.toggleLoader('on');
-	                }
-	            } else {
-	                that.initializeAceEditor();
-	            }
-	        }
-	    });
-
-
-	    this.applyUserCss = function (css) {
-	        $('#' + app.prefix + 'user-css').remove();
-	        $('head').append('<style id="' + app.prefix + 'user-css" type="text/css">' + css + '</style>');
-	    };
-
-
-	    this.initializeAceEditor = function () {
-	        $aceEditor.text($editor.val());
-	        $editor.replaceWith($aceEditor);
-
-	        aceEditor = window.ace.edit(app.prefix + 'css-editor');
-	        aceEditor.setTheme("ace/theme/tomorrow_night");
-	        aceEditor.getSession().setMode("ace/mode/css");
-	        aceEditor.getSession().setTabSize(4);
-	        aceEditor.getSession().setUseSoftTabs(true);
-	        aceEditor.getSession().setUseWrapMode(true);
-	        aceEditor.getSession().setWrapLimitRange();
-	        aceEditor.setOptions({
-	            minLines: 30,
-	            maxLines: 30,
-	            autoScrollEditorIntoView: true,
-	            highlightActiveLine: true
-	        });
-	    };
-
-
-	    /**
-	     * Saving and applying settings
-	     */
-	    app.Settings.onSave(function (settings) {
-	        if (aceEditor) {
-	            settings.set(namespace + '.css', aceEditor.getValue());
-	        } else {
-	            settings.set(namespace + '.css', $editor.val());
-	        }
-
-	        that.applyUserCss(settings.get(namespace + '.css'));
-	    });
-	    this.applyUserCss(app.Settings.storage.get(namespace + '.css'));
-	});
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('customJs', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        aceUrl: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js'
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    var tab = app.Settings.getTab('custom-js', 'JS', 300);
-	    var namespace = 'user-code';
-	    app.Settings.storage.setDefault(namespace + '.js', '');
-
-	    var $editor = $('<textarea class="' + app.prefix + 'custom-editor-textarea"></textarea>').val(app.Settings.storage.get(namespace + '.js')).appendTo(tab.$content);
-	    var $aceEditor = $('<div class="' + app.prefix + 'custom-editor-ace" id="' + app.prefix + 'js-editor"></div>').text(app.Settings.storage.get(namespace + '.js'));
-	    var aceEditor;
-
-
-	    tab.onShow(function () {
-	        if (typeof aceEditor === 'undefined') {
-	            if (typeof window.ace === 'undefined') {
-	                if (!app.Settings.aceIsLoading && !app.Settings.aceLoadingFailed) {
-	                    app.Settings.aceIsLoading = true;
-
-	                    $.ajax({
-	                        url: settings.aceUrl,
-	                        dataType: "script",
-	                        timeout: 20000 //20 sec
-	                    }).done(function () {
-	                        that.initializeAceEditor();
-	                    }).always(function () {
-	                        app.Settings.aceIsLoading = false;
-	                        app.Settings.aceLoadingFailed = true;
-	                        tab.$content.toggleLoader('off');
-	                    });
-	                }
-
-	                if (app.Settings.aceIsLoading && !app.Settings.aceLoadingFailed) {
-	                    tab.$content.toggleLoader('on');
-	                }
-	            } else {
-	                that.initializeAceEditor();
-	            }
-	        }
-	    });
-
-
-	    this.applyUserJs = function (js) {
-	        $('#' + app.prefix + 'user-js').remove();
-	        $('body').append('<script id="' + app.prefix + 'user-js" type="text/javascript">' + js + '</script>');
-	    };
-
-
-	    this.initializeAceEditor = function () {
-	        $aceEditor.text($editor.val());
-	        $editor.replaceWith($aceEditor);
-
-	        aceEditor = window.ace.edit(app.prefix + 'js-editor');
-	        aceEditor.setTheme("ace/theme/tomorrow_night");
-	        aceEditor.getSession().setMode("ace/mode/javascript");
-	        aceEditor.getSession().setTabSize(4);
-	        aceEditor.getSession().setUseSoftTabs(true);
-	        aceEditor.getSession().setUseWrapMode(true);
-	        aceEditor.getSession().setWrapLimitRange();
-	        aceEditor.setOptions({
-	            minLines: 30,
-	            maxLines: 30,
-	            autoScrollEditorIntoView: true,
-	            highlightActiveLine: true
-	        });
-	    };
-
-
-	    /**
-	     * Saving and applying settings
-	     */
-	    app.Settings.onSave(function (settings) {
-	        if (aceEditor) {
-	            settings.set(namespace + '.js', aceEditor.getValue());
-	        } else {
-	            settings.set(namespace + '.js', $editor.val());
-	        }
-
-	        that.applyUserJs(settings.get(namespace + '.js'));
-	    });
-	    this.applyUserJs(app.Settings.storage.get(namespace + '.js'));
-	});
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('extras', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        enabledModules: ['anime-quotes', 'pirate-quotes']
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    var tab = app.Settings.getTab('extras', app.t('extras[.]Extras'), 400);
-	    var $tabContent = $('<div class="row">').appendTo(tab.$content).wrap('<div class="' + app.prefix + 'extras">');
-	    var userSettings = app.Settings.storage;
-
-	    var $modulesInfoMessage = $('<div class="' + app.prefix + 'extras__info-message">').text('Сторонние модули отсутствуют.').prependTo(tab.$content);
-
-	    var namespace = 'extras';
-	    userSettings.setDefault(namespace + '.enabled', settings.enabledModules);
-	    this.enabledModules = userSettings.get(namespace + '.enabled') || [];
-	    this.extraModules = {};
-
-
-	    this.add = function (config) {
-	        $modulesInfoMessage.text(app.t('extras[.]Extras for additional functionality'));
-
-	        that.extraModules[config.name] = config;
-	        that.extraModules[config.name].$el = that.addMarkup(config).appendTo($tabContent);
-	        that.sort();
-
-	        if (that.enabledModules.indexOf(config.name) != -1) {
-	            $.getScript(that.extraModules[config.name].url + '?ac=' + Date.now());
-	        }
-	    };
-
-
-	    this.enable = function (name) {
-	        return that.enabledModules.push(name);
-	    };
-
-
-	    this.disable = function (name) {
-	        var position = that.enabledModules.indexOf(name);
-
-	        if (position !== -1) {
-	            return that.enabledModules.splice(position, 1);
-	        } else {
-	            return false;
-	        }
-	    };
-
-
-	    this.addMarkup = function (config) {
-	        var $moduleInfo = $('<div class="' + app.prefix + 'extras__item">');
-	        $moduleInfo.data('name', config.name);
-
-
-	        config.authorUrl = _.trim(config.authorUrl);
-	        var $title = config.authorUrl ?
-	            $('<a class="' + app.prefix + 'extras__item__title ' + app.prefix + 'extras__item__title_link" target="_blank">').attr('href', config.authorUrl).text(config.title).appendTo($moduleInfo) :
-	            $('<div class="' + app.prefix + 'extras__item__title ' + app.prefix + 'extras__item__title_text">').text(config.title).appendTo($moduleInfo);
-
-	        var $description = $('<div class="' + app.prefix + 'extras__item__description">').text(config.description || 'Нет описания').appendTo($moduleInfo);
-
-	        var $toggleModuleButton = $('<div class="' + app.prefix + 'extras__item__button btn btn-xs">').appendTo($moduleInfo).data('enabled', that.enabledModules.indexOf(config.name) != -1).on('click', function () {
-	            if ($(this).data('enabled')) {
-	                $(this).data('enabled', false);
-	                that.disable(config.name);
-	                $(this).removeClass('btn-danger').addClass('btn-success').text('Включить');
-	            } else {
-	                $(this).data('enabled', true);
-	                that.enable(config.name);
-	                $(this).removeClass('btn-success').addClass('btn-danger').text('Выключить');
-	            }
-	        });
-	        if (that.enabledModules.indexOf(config.name) != -1) {
-	            $toggleModuleButton.addClass('btn-danger').text('Выключить');
-	        } else {
-	            $toggleModuleButton.addClass('btn-success').text('Включить');
-	        }
-
-	        $moduleInfo = $('<div class="col-md-6">').append($moduleInfo);
-
-	        return $moduleInfo;
-	    };
-
-
-	    this.sort = function () {
-	        var extraModulesArray = [];
-	        for (var module in that.extraModules) {
-	            extraModulesArray.push(that.extraModules[module]);
-	        }
-
-	        extraModulesArray = extraModulesArray.sort(function (a, b) {
-	            var aSort = +(that.enabledModules.indexOf(a.name) != -1);
-	            var bSort = +(that.enabledModules.indexOf(b.name) != -1);
-
-	            if (aSort < bSort) {
-	                return 1;
-	            } else if (aSort > bSort) {
-	                return -1;
-	            } else {
-	                if (a.title.toLowerCase() > b.title.toLowerCase()) {
-	                    return 1;
-	                } else if (a.title.toLowerCase() < b.title.toLowerCase()) {
-	                    return -1;
-	                } else {
-	                    return 0;
-	                }
-	            }
-	        });
-
-	        for (var extraModuleIndex = 0, extraModulesLength = extraModulesArray.length; extraModuleIndex < extraModulesLength; extraModuleIndex++) {
-	            extraModulesArray[extraModuleIndex].$el.detach().appendTo($tabContent);
-	        }
-	    };
-
-
-	    /**
-	     * Saving and applying settings
-	     */
-	    app.Settings.onSave(function (settings) {
-	        settings.set(namespace + '.enabled', that.enabledModules);
-
-	        if (settings.isDirty(namespace + '.enabled')) {
-	            app.Settings.requestPageReload();
-	        }
-	    });
-	});
-
-
-/***/ }),
-/* 21 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('favouritePictures', function (app) {
@@ -19108,577 +18221,7 @@
 
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	__webpack_require__(23)($);
-	__webpack_require__(24);
-	window.cytubeEnhanced.addModule('imagePreview', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        selectorsToPreview: '.chat-picture, .motd-tab-content img', // 'selector1, selector2'. Every selector's node must have attribute src
-	        zoom: 0.15
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    this.showPicturePreview = function (pictureToPreview) {
-	        if ($(pictureToPreview).is(settings.selectorsToPreview)) {
-	            var $picture = $('<img src="' + $(pictureToPreview).attr('src') + '">');
-
-	            $picture.ready(function () {
-	                $('<div id="modal-picture-overlay">').appendTo($(document.body));
-	                var $modalPicture = $('<div id="modal-picture">').appendTo($(document.body)).draggable();
-
-	                var pictureWidth = $picture.prop('width');
-	                var pictureHeight = $picture.prop('height');
-
-
-	                var $modalPictureOptions = $('<div id="modal-picture-options">');
-	                $modalPicture.append($('<div id="modal-picture-options-wrapper">').append($modalPictureOptions));
-
-	                $('<a href="' + $picture.prop('src') + '" target="_blank" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-eye-open"></i></button>')
-	                    .appendTo($modalPictureOptions);
-	                $('<a href="https://www.google.com/searchbyimage?image_url=' + $picture.prop('src') + '" target="_blank" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-search"></i></button>')
-	                    .appendTo($modalPictureOptions);
-
-
-	                var scaleFactor = 1;
-	                if (pictureWidth > document.documentElement.clientWidth && pictureHeight > document.documentElement.clientHeight) {
-	                    if ((pictureHeight - document.documentElement.clientHeight) > (pictureWidth - document.documentElement.clientWidth)) {
-	                        scaleFactor = pictureHeight / (document.documentElement.clientHeight * 0.8);
-	                    } else {
-	                        scaleFactor = pictureWidth / (document.documentElement.clientWidth * 0.8);
-	                    }
-	                } else if (pictureHeight > document.documentElement.clientHeight) {
-	                    scaleFactor = pictureHeight / (document.documentElement.clientHeight * 0.8);
-	                } else if (pictureWidth > document.documentElement.clientWidth) {
-	                    scaleFactor = pictureWidth / (document.documentElement.clientWidth * 0.8);
-	                }
-
-	                pictureHeight /= scaleFactor;
-	                pictureWidth /= scaleFactor;
-
-	                $modalPicture.css({
-	                    width: pictureWidth,
-	                    height: pictureHeight,
-	                    marginLeft: -(pictureWidth / 2),
-	                    marginTop: -(pictureHeight / 2)
-	                });
-
-
-	                $picture.appendTo($modalPicture);
-	            });
-	        }
-	    };
-	    $(document.body).on('click', function (event) {
-	        that.showPicturePreview(event.target);
-	    });
-
-
-	    this.handleModalPictureMouseWheel = function (e) {
-	        var $modalPicture = $('#modal-picture');
-	        var pictureWidth = parseInt($modalPicture.css('width'), 10);
-	        var pictureHeight = parseInt($modalPicture.css('height'), 10);
-	        var pictureMarginLeft = parseInt($modalPicture.css('marginLeft'), 10);
-	        var pictureMarginTop = parseInt($modalPicture.css('marginTop'), 10);
-
-	        if (e.originalEvent.deltaY < 0) { //up
-	            $modalPicture.css({
-	                width: pictureWidth * (1 + settings.zoom),
-	                height: pictureHeight * (1 + settings.zoom),
-	                marginLeft: pictureMarginLeft + (-pictureWidth * settings.zoom / 2),
-	                marginTop: pictureMarginTop + (-pictureHeight * settings.zoom / 2)
-	            });
-	        } else { //down
-	            $modalPicture.css({
-	                width: pictureWidth * (1 - settings.zoom),
-	                height: pictureHeight * (1 - settings.zoom),
-	                marginLeft: pictureMarginLeft + (pictureWidth * settings.zoom / 2),
-	                marginTop: pictureMarginTop + (pictureHeight * settings.zoom / 2)
-	            });
-	        }
-	    };
-	    $(document.body).on('mousewheel', '#modal-picture', function (e) {
-	        that.handleModalPictureMouseWheel(e);
-
-	        return false;
-	    });
-
-
-	    this.closePictureByClick = function () {
-	        $('#modal-picture-overlay').remove();
-	        $('#modal-picture').remove();
-	    };
-	    $(document.body).on('click', '#modal-picture-overlay, #modal-picture', function () {
-	        that.closePictureByClick();
-	    });
-
-	    this.closePictureByEscape = function (e) {
-	        if (e.which === 27 && $('#modal-picture').length !== 0) {
-	            $('#modal-picture-overlay').remove();
-	            $('#modal-picture').remove();
-	        }
-	    };
-	    $(document.body).on('keydown', function (e) {
-	        that.closePictureByEscape(e);
-	    });
-	});
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-	/*!
-	 * jQuery Mousewheel 3.1.13
-	 *
-	 * Copyright jQuery Foundation and other contributors
-	 * Released under the MIT license
-	 * http://jquery.org/license
-	 */
-
-	(function (factory) {
-	    if ( typeof define === 'function' && define.amd ) {
-	        // AMD. Register as an anonymous module.
-	        define(['jquery'], factory);
-	    } else if (typeof exports === 'object') {
-	        // Node/CommonJS style for Browserify
-	        module.exports = factory;
-	    } else {
-	        // Browser globals
-	        factory(jQuery);
-	    }
-	}(function ($) {
-
-	    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
-	        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
-	                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-	        slice  = Array.prototype.slice,
-	        nullLowestDeltaTimeout, lowestDelta;
-
-	    if ( $.event.fixHooks ) {
-	        for ( var i = toFix.length; i; ) {
-	            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
-	        }
-	    }
-
-	    var special = $.event.special.mousewheel = {
-	        version: '3.1.12',
-
-	        setup: function() {
-	            if ( this.addEventListener ) {
-	                for ( var i = toBind.length; i; ) {
-	                    this.addEventListener( toBind[--i], handler, false );
-	                }
-	            } else {
-	                this.onmousewheel = handler;
-	            }
-	            // Store the line height and page height for this particular element
-	            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
-	            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
-	        },
-
-	        teardown: function() {
-	            if ( this.removeEventListener ) {
-	                for ( var i = toBind.length; i; ) {
-	                    this.removeEventListener( toBind[--i], handler, false );
-	                }
-	            } else {
-	                this.onmousewheel = null;
-	            }
-	            // Clean up the data we added to the element
-	            $.removeData(this, 'mousewheel-line-height');
-	            $.removeData(this, 'mousewheel-page-height');
-	        },
-
-	        getLineHeight: function(elem) {
-	            var $elem = $(elem),
-	                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-	            if (!$parent.length) {
-	                $parent = $('body');
-	            }
-	            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
-	        },
-
-	        getPageHeight: function(elem) {
-	            return $(elem).height();
-	        },
-
-	        settings: {
-	            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
-	            normalizeOffset: true  // calls getBoundingClientRect for each event
-	        }
-	    };
-
-	    $.fn.extend({
-	        mousewheel: function(fn) {
-	            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
-	        },
-
-	        unmousewheel: function(fn) {
-	            return this.unbind('mousewheel', fn);
-	        }
-	    });
-
-
-	    function handler(event) {
-	        var orgEvent   = event || window.event,
-	            args       = slice.call(arguments, 1),
-	            delta      = 0,
-	            deltaX     = 0,
-	            deltaY     = 0,
-	            absDelta   = 0,
-	            offsetX    = 0,
-	            offsetY    = 0;
-	        event = $.event.fix(orgEvent);
-	        event.type = 'mousewheel';
-
-	        // Old school scrollwheel delta
-	        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-	        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-	        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-	        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
-
-	        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-	        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
-	            deltaX = deltaY * -1;
-	            deltaY = 0;
-	        }
-
-	        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-	        delta = deltaY === 0 ? deltaX : deltaY;
-
-	        // New school wheel delta (wheel event)
-	        if ( 'deltaY' in orgEvent ) {
-	            deltaY = orgEvent.deltaY * -1;
-	            delta  = deltaY;
-	        }
-	        if ( 'deltaX' in orgEvent ) {
-	            deltaX = orgEvent.deltaX;
-	            if ( deltaY === 0 ) { delta  = deltaX * -1; }
-	        }
-
-	        // No change actually happened, no reason to go any further
-	        if ( deltaY === 0 && deltaX === 0 ) { return; }
-
-	        // Need to convert lines and pages to pixels if we aren't already in pixels
-	        // There are three delta modes:
-	        //   * deltaMode 0 is by pixels, nothing to do
-	        //   * deltaMode 1 is by lines
-	        //   * deltaMode 2 is by pages
-	        if ( orgEvent.deltaMode === 1 ) {
-	            var lineHeight = $.data(this, 'mousewheel-line-height');
-	            delta  *= lineHeight;
-	            deltaY *= lineHeight;
-	            deltaX *= lineHeight;
-	        } else if ( orgEvent.deltaMode === 2 ) {
-	            var pageHeight = $.data(this, 'mousewheel-page-height');
-	            delta  *= pageHeight;
-	            deltaY *= pageHeight;
-	            deltaX *= pageHeight;
-	        }
-
-	        // Store lowest absolute delta to normalize the delta values
-	        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
-
-	        if ( !lowestDelta || absDelta < lowestDelta ) {
-	            lowestDelta = absDelta;
-
-	            // Adjust older deltas if necessary
-	            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-	                lowestDelta /= 40;
-	            }
-	        }
-
-	        // Adjust older deltas if necessary
-	        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-	            // Divide all the things by 40!
-	            delta  /= 40;
-	            deltaX /= 40;
-	            deltaY /= 40;
-	        }
-
-	        // Get a whole, normalized value for the deltas
-	        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-	        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-	        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
-
-	        // Normalise offsetX and offsetY properties
-	        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
-	            var boundingRect = this.getBoundingClientRect();
-	            offsetX = event.clientX - boundingRect.left;
-	            offsetY = event.clientY - boundingRect.top;
-	        }
-
-	        // Add information to the event object
-	        event.deltaX = deltaX;
-	        event.deltaY = deltaY;
-	        event.deltaFactor = lowestDelta;
-	        event.offsetX = offsetX;
-	        event.offsetY = offsetY;
-	        // Go ahead and set deltaMode to 0 since we converted to pixels
-	        // Although this is a little odd since we overwrite the deltaX/Y
-	        // properties with normalized deltas.
-	        event.deltaMode = 0;
-
-	        // Add event and delta to the front of the arguments
-	        args.unshift(event, delta, deltaX, deltaY);
-
-	        // Clearout lowestDelta after sometime to better
-	        // handle multiple device types that give different
-	        // a different lowestDelta
-	        // Ex: trackpad = 3 and mouse wheel = 120
-	        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
-	        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
-
-	        return ($.event.dispatch || $.event.handle).apply(this, args);
-	    }
-
-	    function nullLowestDelta() {
-	        lowestDelta = null;
-	    }
-
-	    function shouldAdjustOldDeltas(orgEvent, absDelta) {
-	        // If this is an older event and the delta is divisable by 120,
-	        // then we are assuming that the browser is treating this as an
-	        // older mouse wheel event and that we should divide the deltas
-	        // by 40 to try and get a more usable deltaFactor.
-	        // Side note, this actually impacts the reported scroll distance
-	        // in older browsers and can cause scrolling to be slower than native.
-	        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
-	        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
-	    }
-
-	}));
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-	/*!
-	 * jQuery UI Touch Punch 0.2.3
-	 *
-	 * Copyright 2011–2014, Dave Furfero
-	 * Dual licensed under the MIT or GPL Version 2 licenses.
-	 *
-	 * Depends:
-	 *  jquery.ui.widget.js
-	 *  jquery.ui.mouse.js
-	 */
-	(function ($) {
-
-	  // Detect touch support
-	  $.support.touch = 'ontouchend' in document;
-
-	  // Ignore browsers without touch support
-	  if (!$.support.touch) {
-	    return;
-	  }
-
-	  var mouseProto = $.ui.mouse.prototype,
-	      _mouseInit = mouseProto._mouseInit,
-	      _mouseDestroy = mouseProto._mouseDestroy,
-	      touchHandled;
-
-	  /**
-	   * Simulate a mouse event based on a corresponding touch event
-	   * @param {Object} event A touch event
-	   * @param {String} simulatedType The corresponding mouse event
-	   */
-	  function simulateMouseEvent (event, simulatedType) {
-
-	    // Ignore multi-touch events
-	    if (event.originalEvent.touches.length > 1) {
-	      return;
-	    }
-
-	    event.preventDefault();
-
-	    var touch = event.originalEvent.changedTouches[0],
-	        simulatedEvent = document.createEvent('MouseEvents');
-	    
-	    // Initialize the simulated mouse event using the touch event's coordinates
-	    simulatedEvent.initMouseEvent(
-	      simulatedType,    // type
-	      true,             // bubbles                    
-	      true,             // cancelable                 
-	      window,           // view                       
-	      1,                // detail                     
-	      touch.screenX,    // screenX                    
-	      touch.screenY,    // screenY                    
-	      touch.clientX,    // clientX                    
-	      touch.clientY,    // clientY                    
-	      false,            // ctrlKey                    
-	      false,            // altKey                     
-	      false,            // shiftKey                   
-	      false,            // metaKey                    
-	      0,                // button                     
-	      null              // relatedTarget              
-	    );
-
-	    // Dispatch the simulated event to the target element
-	    event.target.dispatchEvent(simulatedEvent);
-	  }
-
-	  /**
-	   * Handle the jQuery UI widget's touchstart events
-	   * @param {Object} event The widget element's touchstart event
-	   */
-	  mouseProto._touchStart = function (event) {
-
-	    var self = this;
-
-	    // Ignore the event if another widget is already being handled
-	    if (touchHandled || !self._mouseCapture(event.originalEvent.changedTouches[0])) {
-	      return;
-	    }
-
-	    // Set the flag to prevent other widgets from inheriting the touch event
-	    touchHandled = true;
-
-	    // Track movement to determine if interaction was a click
-	    self._touchMoved = false;
-
-	    // Simulate the mouseover event
-	    simulateMouseEvent(event, 'mouseover');
-
-	    // Simulate the mousemove event
-	    simulateMouseEvent(event, 'mousemove');
-
-	    // Simulate the mousedown event
-	    simulateMouseEvent(event, 'mousedown');
-	  };
-
-	  /**
-	   * Handle the jQuery UI widget's touchmove events
-	   * @param {Object} event The document's touchmove event
-	   */
-	  mouseProto._touchMove = function (event) {
-
-	    // Ignore event if not handled
-	    if (!touchHandled) {
-	      return;
-	    }
-
-	    // Interaction was not a click
-	    this._touchMoved = true;
-
-	    // Simulate the mousemove event
-	    simulateMouseEvent(event, 'mousemove');
-	  };
-
-	  /**
-	   * Handle the jQuery UI widget's touchend events
-	   * @param {Object} event The document's touchend event
-	   */
-	  mouseProto._touchEnd = function (event) {
-
-	    // Ignore event if not handled
-	    if (!touchHandled) {
-	      return;
-	    }
-
-	    // Simulate the mouseup event
-	    simulateMouseEvent(event, 'mouseup');
-
-	    // Simulate the mouseout event
-	    simulateMouseEvent(event, 'mouseout');
-
-	    // If the touch interaction did not move, it should trigger a click
-	    if (!this._touchMoved) {
-
-	      // Simulate the click event
-	      simulateMouseEvent(event, 'click');
-	    }
-
-	    // Unset the flag to allow other widgets to inherit the touch event
-	    touchHandled = false;
-	  };
-
-	  /**
-	   * A duck punch of the $.ui.mouse _mouseInit method to support touch events.
-	   * This method extends the widget with bound touch event handlers that
-	   * translate touch events to mouse events and pass them to the widget's
-	   * original mouse event handling methods.
-	   */
-	  mouseProto._mouseInit = function () {
-	    
-	    var self = this;
-
-	    // Delegate the touch handlers to the widget's element
-	    self.element.bind({
-	      touchstart: $.proxy(self, '_touchStart'),
-	      touchmove: $.proxy(self, '_touchMove'),
-	      touchend: $.proxy(self, '_touchEnd')
-	    });
-
-	    // Call the original $.ui.mouse init method
-	    _mouseInit.call(self);
-	  };
-
-	  /**
-	   * Remove the touch event handlers
-	   */
-	  mouseProto._mouseDestroy = function () {
-	    
-	    var self = this;
-
-	    // Delegate the touch handlers to the widget's element
-	    self.element.unbind({
-	      touchstart: $.proxy(self, '_touchStart'),
-	      touchmove: $.proxy(self, '_touchMove'),
-	      touchend: $.proxy(self, '_touchEnd')
-	    });
-
-	    // Call the original $.ui.mouse destroy method
-	    _mouseDestroy.call(self);
-	  };
-
-	})(jQuery);
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('languageSwitcher', function (app) {
-	    'use strict';
-	    var that = this;
-
-	    var tab = app.Settings.getTab('general', app.t('general[.]General'), 100);
-
-
-	    var availableLanguages = ['en'];
-	    for (var language in app.translations) {
-	        availableLanguages.push(language);
-	    }
-
-	    var options = [];
-	    for (var languageIndex in availableLanguages) {
-	        options.push({
-	            value: availableLanguages[languageIndex],
-	            title: app.t(availableLanguages[languageIndex]),
-	            selected: (availableLanguages[languageIndex] == app.storage.get('language'))
-	        });
-	    }
-
-
-	    tab.addControl('select', 'horizontal', app.t('general[.]Interface language'), 'language', options, null, 20000);
-
-
-	    app.Settings.onSave(function (settings) {
-	        app.storage.set('language', $('#' + app.prefix + 'language').val());
-
-	        if (app.storage.isDirty('language')) {
-	            app.Settings.requestPageReload();
-	        }
-	    });
-	});
-
-/***/ }),
-/* 26 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('navMenuTabs', function (app) {
@@ -19966,7 +18509,7 @@
 	});
 
 /***/ }),
-/* 27 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('showVideoInfo', function (app) {
@@ -19997,377 +18540,7 @@
 
 
 /***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('smilesAndFavouritePicturesTogether', function (app) {
-	    'use strict';
-	    var that = this;
-
-	    var tab = app.Settings.getTab('general', app.t('general[.]General'), 100);
-	    var userSettings = app.Settings.storage;
-
-
-	    if (!app.isModulePermitted('smiles') || !app.isModulePermitted('favouritePictures')) {
-	        return;
-	    }
-
-	    var namespace = 'general';
-	    this.scheme = {
-	        'smiles-and-favourite-pictures-together': {
-	            title: app.t('general[.]Smiles and pictures together'),
-	            default: 'no',
-	            options: [
-	                {value: 'yes', title: app.t('settings[.]Yes')},
-	                {value: 'no', title: app.t('settings[.]No')}
-	            ]
-	        }
-	    };
-
-
-	    /**
-	     * Creating markup for settings
-	     */
-	    var schemeItem;
-	    var option;
-	    var sort = 10000;
-	    for (var itemName in this.scheme) {
-	        schemeItem = this.scheme[itemName];
-
-	        userSettings.setDefault(namespace + '.' + itemName, schemeItem.default);
-
-	        if (userSettings.get(namespace + '.' + itemName)) {
-	            for (option in schemeItem.options) {
-	                schemeItem.options[option].selected = (userSettings.get(namespace + '.' + itemName) == schemeItem.options[option].value);
-	            }
-	        }
-
-	        tab.addControl('select', 'horizontal', schemeItem.title, itemName, schemeItem.options, null, sort);
-	        sort += 100;
-	    }
-
-
-	    /**
-	     * Saving and applying settings
-	     */
-	    app.Settings.onSave(function (settings) {
-	        for (var itemName in that.scheme) {
-	            settings.set(namespace + '.' + itemName, $('#' + app.prefix + itemName).val());
-	        }
-
-	        if (settings.isDirty(namespace + '.smiles-and-favourite-pictures-together')) {
-	            app.Settings.requestPageReload();
-	        }
-	    });
-
-
-	    if (userSettings.get(namespace + '.smiles-and-favourite-pictures-together')  == 'yes') {
-	        app.getModule('smiles').done(function (smilesModule) {
-	            smilesModule.makeSmilesAndPicturesTogether();
-	        });
-
-	        app.getModule('favouritePictures').done(function (favouritePicturesModule) {
-	            favouritePicturesModule.makeSmilesAndPicturesTogether();
-	        });
-
-	        $('<button id="smiles-and-picture-btn" class="btn btn-sm btn-default" title="' + app.t('general[.]Show emotes and favorite images') + '">')
-	            .html('<i class="glyphicon glyphicon-th-large"></i>')
-	            .prependTo($('#chat-controls'))
-	            .on('click', function () {
-	                $('#smiles-btn').click();
-	                $('#favourite-pictures-btn').click();
-
-	                if ($(this).hasClass('btn-default')) {
-	                    $(this).removeClass('btn-default');
-	                    $(this).addClass('btn-success');
-	                } else {
-	                    $(this).removeClass('btn-success');
-	                    $(this).addClass('btn-default');
-	                }
-	            });
-	    }
-	});
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('smiles', function (app) {
-	    'use strict';
-	    var that = this;
-
-	    $('#emotelistbtn').hide();
-	    if ($('#chat-panel').length === 0) {
-	        $('<div id="chat-panel" class="row">').insertAfter("#main");
-	    }
-	    if ($('#chat-controls').length === 0) {
-	        $('<div id="chat-controls" class="btn-group">').appendTo("#chatwrap");
-	    }
-
-	    this.$smilesBtn = $('<button id="smiles-btn" class="btn btn-sm btn-default" title="' + app.t('emotes[.]Show emotes') + '">')
-	        .html('<i class="glyphicon glyphicon-picture"></i>')
-	        .prependTo('#chat-controls');
-
-	    this.$smilesPanel = $('<div id="smiles-panel">')
-	        .prependTo('#chat-panel')
-	        .hide();
-
-
-	    this.renderSmiles = function () {
-	        var smiles = window.CHANNEL.emotes;
-
-	        for (var smileIndex = 0, smilesLen = smiles.length; smileIndex < smilesLen; smileIndex++) {
-	            $('<img class="smile-on-panel">')
-	                .attr({src: smiles[smileIndex].image})
-	                .data('name', smiles[smileIndex].name)
-	                .appendTo(this.$smilesPanel);
-	        }
-	    };
-
-
-	    this.insertSmile = function (smileName) {
-	        app.Helpers.addMessageToChatInput(' ' + smileName + ' ', 'end');
-	    };
-	    $(document.body).on('click', '.smile-on-panel', function () {
-	        that.insertSmile($(this).data('name'));
-	    });
-
-
-	    $(window).on('resize', function () {
-	        if (app.Helpers.getViewportSize().width < 992) {
-	            that.$smilesPanel.empty();
-	        }
-	    });
-	    this.showSmilesPanel = function () {
-	        if (app.Helpers.getViewportSize().width < 992) {
-	            that.$smilesPanel.empty();
-	            $('#emotelistbtn').click();
-	        } else {
-	            if (that.$smilesPanel.html() === '') {
-	                that.renderSmiles();
-	            }
-
-	            var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false; //setted up by userConfig module
-
-	            if ($('#favourite-pictures-panel').length !== 0 && !smilesAndPicturesTogether) {
-	                $('#favourite-pictures-panel').hide();
-	            }
-
-	            that.$smilesPanel.toggle();
-
-	            if (!smilesAndPicturesTogether) {
-	                if (that.$smilesBtn.hasClass('btn-default')) {
-	                    if ($('#favourite-pictures-btn').length !== 0 && $('#favourite-pictures-btn').hasClass('btn-success')) {
-	                        $('#favourite-pictures-btn').removeClass('btn-success').addClass('btn-default');
-	                    }
-
-	                    that.$smilesBtn.removeClass('btn-default');
-	                    that.$smilesBtn.addClass('btn-success');
-	                } else {
-	                    that.$smilesBtn.removeClass('btn-success');
-	                    that.$smilesBtn.addClass('btn-default');
-	                }
-	            }
-	        }
-	    };
-	    this.$smilesBtn.on('click', function() {
-	        that.showSmilesPanel();
-	    });
-
-
-	    this.makeSmilesAndPicturesTogether = function () {
-	        that.smilesAndPicturesTogether = true;
-	        that.$smilesBtn.hide();
-	        that.$smilesPanel.hide();
-	    };
-	});
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('themes', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        defaultTheme: 'halloween', //default theme for user (until user do not change it)
-	        themeId: 'theme-css' //node id in DOM
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-
-	    $('#us-theme').closest('.form-group').hide().val('/css/themes/slate.css');
-	    if (window.createCookie) {
-	        window.createCookie('cytube-theme', '/css/themes/slate.css', 1000);
-	    }
-
-
-	    var tab = app.Settings.getTab('themes', app.t('themes[.]Themes'), 500);
-	    var $tabContent = $('<div class="' + app.prefix + 'themes">').appendTo(tab.$content);
-	    var userSettings = app.Settings.storage;
-
-	    var $themesInfoMessage = $('<div class="' + app.prefix + 'themes__info-message">').text('Темы отсутствуют.').prependTo(tab.$content);
-
-	    var namespace = 'themes';
-	    userSettings.setDefault(namespace + '.selected', settings.defaultTheme);
-	    this.themes = {};
-
-
-	    //if settings.defaultTheme was changed by administrator ask user if he want to switch on it
-	    this.applyNewDefaultTheme = function () {
-	        var previousDefaultTheme = userSettings.get(namespace + '.previousDefaultTheme');
-	        if (userSettings.get(namespace + '.selected') == previousDefaultTheme) {
-	            userSettings.set(namespace + '.previousDefaultTheme', settings.defaultTheme);
-	            that.setTheme(settings.defaultTheme);
-	            userSettings.save();
-	            console.log('reloading');
-	            window.location.reload();
-	        } else if (!previousDefaultTheme || (previousDefaultTheme && previousDefaultTheme != settings.defaultTheme)) {
-	            userSettings.set(namespace + '.previousDefaultTheme', settings.defaultTheme);
-	            userSettings.save();
-
-	            if (settings.defaultTheme != userSettings.get(namespace + '.selected')) {
-	                var themeTitle = that.themes[settings.defaultTheme].title;
-	                app.UI.createConfirmWindow(app.t('themes[.]Default theme was changed to "%themeTitle%" by administrator. Do you want to try it? (Don\'t forget, that you can switch your theme in extended settings anytime.)').replace('%themeTitle%', themeTitle), function (isConfirmed) {
-	                    if (isConfirmed) {
-	                        that.setTheme(settings.defaultTheme);
-	                        userSettings.save();
-	                        app.UI.createConfirmWindow(app.t('settings[.]Some settings need to refresh the page to get to work. Do it now?'), function (isConfirmed) {
-	                            if (isConfirmed) {
-	                                window.location.reload();
-	                            }
-	                        });
-	                    }
-	                });
-	            }
-	        }
-	    };
-
-
-	    this.add = function (config) {
-	        $themesInfoMessage.remove();
-
-	        that.themes[config.name] = config;
-	        that.themes[config.name].$el = that.addMarkup(config).appendTo($tabContent);
-	        that.sort();
-
-	        if (config.name === userSettings.get(namespace + '.selected')) {
-	            if (config.name === settings.defaultTheme) {
-	                userSettings.set(namespace + '.previousDefaultTheme', settings.defaultTheme);
-	                userSettings.save();
-	            }
-	            that.setTheme(config.name);
-	            that.applyTheme(config.name);
-	        } else if (config.name === settings.defaultTheme) {
-	            that.applyNewDefaultTheme();
-	        }
-	    };
-
-
-	    tab.onShow(function () {
-	        $('.' + app.prefix + 'themes__item')
-	            .removeClass('active')
-	            .filter(function() {
-	                return $(this).data('name') === userSettings.get(namespace + '.selected');
-	            })
-	            .addClass('active');
-	    });
-
-
-	    /**
-	     * Sets theme
-	     * @param name Theme's name
-	     */
-	    this.setTheme = function (name) {
-	        userSettings.set(namespace + '.selected', name);
-
-	        $('.' + app.prefix + 'themes__item')
-	            .removeClass('active')
-	            .filter(function() {
-	                return $(this).data('name') === name;
-	            })
-	            .addClass('active');
-	    };
-
-
-	    this.applyTheme = function (name) {
-	        var config = that.themes[name];
-
-	        $('#' + settings.themeId).remove();
-	        if (config.cssUrl) {
-	            $('<link rel="stylesheet" id="' + settings.themeId + '">').attr('href', config.cssUrl).appendTo($('head'));
-	        } else { //resets to default theme
-	            that.setTheme(userSettings.getDefault(namespace + '.selected'));
-	        }
-
-	        if (config.jsUrl) {
-	            $.getScript(config.jsUrl);
-	        }
-	    };
-
-
-	    this.addMarkup = function (config) {
-	        var $moduleInfo = $('<div class="' + app.prefix + 'themes__item">').data('name', config.name).on('click', function () {
-	            var name = $(this).data('name');
-
-	            if (name !== userSettings.get(namespace + '.selected')) {
-	                app.UI.createConfirmWindow(app.t('themes[.]Apply this theme?'), function (isConfirmed) {
-	                    if (isConfirmed) {
-	                        that.setTheme(name);
-	                    }
-	                });
-	            }
-	        });
-
-
-	        var $title = $('<div class="' + app.prefix + 'themes__item__title">').text(config.title).appendTo($moduleInfo);
-
-	        if (typeof config.pictureUrl !== 'undefined' && (config.pictureUrl = config.pictureUrl.trim()) !== '') {
-	            $('<div class="' + app.prefix + 'themes__item__picture">').appendTo($moduleInfo).css('background-image', 'url("' + config.pictureUrl + '")');
-	        }
-
-
-	        return $moduleInfo;
-	    };
-
-
-	    this.sort = function () {
-	        var themesArray = [];
-	        for (var theme in that.themes) {
-	            themesArray.push(that.themes[theme]);
-	        }
-
-	        themesArray = themesArray.sort(function (a, b) {
-	            if (a.title.toLowerCase() > b.title.toLowerCase()) {
-	                return 1;
-	            } else if (a.title.toLowerCase() < b.title.toLowerCase()) {
-	                return -1;
-	            } else {
-	                return 0;
-	            }
-	        });
-
-	        for (var themeIndex = 0, themesLength = themesArray.length; themeIndex < themesLength; themeIndex++) {
-	            themesArray[themeIndex].$el.detach().appendTo($tabContent);
-	        }
-	    };
-
-
-	    /**
-	     * Saving and applying settings
-	     */
-	    app.Settings.onSave(function (settings) {
-	        if (settings.isDirty(namespace + '.selected')) {
-	            app.Settings.requestPageReload();
-	        }
-	    });
-	});
-
-
-/***/ }),
-/* 31 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.addModule('uiRussianTranslate', function (app) {
@@ -20535,358 +18708,7 @@
 
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('videoControls', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        turnOffVideoOption: true,
-	        selectQualityOption: true,
-	        expandPlaylistOption: true,
-	        showVideoContributorsOption: true,
-	        playlistHeight: 500
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    $('#mediarefresh').hide();
-
-
-	    this.$topVideoControls = $('<div id="top-video-controls" class="btn-group">').appendTo("#videowrap");
-
-	    this.refreshVideo = function () {
-	        $('#mediarefresh').click();
-	    };
-	    this.$refreshVideoBtn = $('<button id="refresh-video" class="btn btn-sm btn-default" title="' + app.t('video[.]Refresh video') + '">')
-	        .html('<i class="glyphicon glyphicon-refresh">')
-	        .appendTo(this.$topVideoControls)
-	        .on('click', function () {
-	            that.refreshVideo();
-	        });
-
-
-	    this.hidePlayer = function ($hidePlayerBtn) {
-	        if ($hidePlayerBtn.hasClass('btn-default')) { //video visible
-	            var $playerWindow = $('#videowrap').find('.embed-responsive');
-	            $playerWindow.css({position: 'relative'});
-
-	            $('<div id="player-overlay">').appendTo($playerWindow);
-
-	            $hidePlayerBtn.html('<i class="glyphicon glyphicon-film">')
-	                .removeClass('btn-default')
-	                .addClass('btn-success');
-	        } else { //video hidden
-	            $('#player-overlay').remove();
-
-	            $hidePlayerBtn.html('<i class="glyphicon glyphicon-ban-circle">')
-	                .removeClass('btn-success').addClass('btn-default');
-	        }
-	    };
-	    this.$hidePlayerBtn = $('<button id="hide-player-btn" class="btn btn-sm btn-default" title="' + app.t('video[.]Hide video') + '">')
-	        .html('<i class="glyphicon glyphicon-ban-circle">')
-	        .appendTo(this.$topVideoControls)
-	        .on('click', function() {
-	            that.hidePlayer($(this));
-	        });
-	    if (!settings.turnOffVideoOption) {
-	        this.$hidePlayerBtn.hide();
-	    }
-
-
-	    this.qualityLabelsTranslate = {
-	        auto: 'авто',
-	        240: '240p',
-	        360: '360p',
-	        480: '480p',
-	        720: '720p',
-	        1080: '1080p',
-	        best: app.t('video[.]best')
-	    };
-	    var qualityLabelsTranslateOrder = ['auto', 240, 360, 480, 720, 1080, 'best'];
-
-	    this.$videoQualityBtnGroup = $('<div class="btn-group">')
-	        .html('<button type="button" class="btn btn-default btn-sm video-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + app.t('video[.]Quality') + ': ' + this.qualityLabelsTranslate[window.USEROPTS.default_quality || 'auto'] + ' <span class="caret"></span></button>')
-	        .appendTo(this.$topVideoControls);
-
-	    this.$videoQualityList = $('<ul class="dropdown-menu">');
-	    for (var labelIndex = 0, labelsLength = qualityLabelsTranslateOrder.length; labelIndex < labelsLength; labelIndex++) {
-	        $('<li>')
-	            .html('<a href="#" data-quality="' + qualityLabelsTranslateOrder[labelIndex] + '">' + this.qualityLabelsTranslate[qualityLabelsTranslateOrder[labelIndex]] + '</a>')
-	            .appendTo(this.$videoQualityList);
-	    }
-	    this.$videoQualityList.appendTo(this.$videoQualityBtnGroup);
-
-	    this.changeVideoQuality = function ($qualityLink) {
-	        this.settingsFix();
-	        $("#us-default-quality").val($qualityLink.data('quality'));
-	        window.saveUserOptions();
-
-	        this.$refreshVideoBtn.click();
-
-	        this.$videoQualityBtnGroup.find('button').html(app.t('video[.]Quality') + ': ' + $qualityLink.text() + ' <span class="caret"></span>');
-	        $('.video-dropdown-toggle').dropdown();
-	    };
-	    this.$videoQualityBtnGroup.on('click', 'a', function () {
-	        that.changeVideoQuality($(this));
-
-	        return false;
-	    });
-
-	    $("#us-default-quality").on('change', function () {
-	        that.$videoQualityBtnGroup.find('button').html(app.t('video[.]Quality') + ': ' + that.qualityLabelsTranslate[$(this).val()] + ' <span class="caret"></span>');
-	    });
-
-	    if (!settings.selectQualityOption) {
-	        this.$videoQualityBtnGroup.hide();
-	    }
-
-
-	    this.settingsFix = function () {
-	        $("#us-theme").val(window.USEROPTS.theme);
-	        $("#us-layout").val(window.USEROPTS.layout);
-	        $("#us-no-channelcss").prop("checked", window.USEROPTS.ignore_channelcss);
-	        $("#us-no-channeljs").prop("checked", window.USEROPTS.ignore_channeljs);
-
-	        $("#us-synch").prop("checked", window.USEROPTS.synch);
-	        $("#us-synch-accuracy").val(window.USEROPTS.sync_accuracy);
-	        $("#us-wmode-transparent").prop("checked", window.USEROPTS.wmode_transparent);
-	        $("#us-hidevideo").prop("checked", window.USEROPTS.hidevid);
-	        $("#us-playlistbuttons").prop("checked", window.USEROPTS.qbtn_hide);
-	        $("#us-oldbtns").prop("checked", window.USEROPTS.qbtn_idontlikechange);
-	        $("#us-default-quality").val(window.USEROPTS.default_quality || "auto");
-
-	        $("#us-chat-timestamp").prop("checked", window.USEROPTS.show_timestamps);
-	        $("#us-sort-rank").prop("checked", window.USEROPTS.sort_rank);
-	        $("#us-sort-afk").prop("checked", window.USEROPTS.sort_afk);
-	        $("#us-blink-title").val(window.USEROPTS.blink_title);
-	        $("#us-ping-sound").val(window.USEROPTS.boop);
-	        $("#us-sendbtn").prop("checked", window.USEROPTS.chatbtn);
-	        $("#us-no-emotes").prop("checked", window.USEROPTS.no_emotes);
-
-	        $("#us-modflair").prop("checked", window.USEROPTS.modhat);
-	        $("#us-joinmessage").prop("checked", window.USEROPTS.joinmessage);
-	        $("#us-shadowchat").prop("checked", window.USEROPTS.show_shadowchat);
-	    };
-
-
-	    if ($('#showmediaurl').length !== 0) {
-	        $('#showmediaurl').html(app.t('standardUI[.]Add video'))
-	            .attr({title: app.t('standardUI[.]Add video from url')})
-	            .detach()
-	            .insertBefore($('#showsearch'));
-	    }
-
-
-	    this.expandPlaylist = function ($expandPlaylistBtn) {
-	        if ($expandPlaylistBtn.hasClass('btn-success')) {//expanded
-	            $('#queue').css('max-height', settings.playlistHeight + 'px');
-
-	            $expandPlaylistBtn.attr('title', app.t('video[.]Expand playlist'));
-
-	            $expandPlaylistBtn.removeClass('btn-success');
-	            $expandPlaylistBtn.addClass('btn-default');
-	        } else {//not expanded
-	            $('#queue').css('max-height', '100000px');
-
-	            $expandPlaylistBtn.attr('title', app.t('video[.]Unexpand playlist'));
-
-	            $expandPlaylistBtn.removeClass('btn-default');
-	            $expandPlaylistBtn.addClass('btn-success');
-
-	            window.scrollQueue();
-	        }
-	    };
-	    this.$expandPlaylistBtn = $('<button id="expand-playlist-btn" class="btn btn-sm btn-default" data-expanded="0" title="' + app.t('video[.]Expand playlist') + '">')
-	        .append('<span class="glyphicon glyphicon-resize-full">')
-	        .prependTo('#videocontrols')
-	        .on('click', function() {
-	            that.expandPlaylist($(this));
-	        });
-	    if (!settings.expandPlaylistOption) {
-	        this.$expandPlaylistBtn.hide();
-	    }
-
-
-	    this.$scrollToCurrentBtn = $('<button id="scroll-to-current-btn" class="btn btn-sm btn-default" title="' + app.t('video[.]Scroll the playlist to the current video') + '">')
-	        .append('<span class="glyphicon glyphicon-hand-right">')
-	        .prependTo('#videocontrols')
-	        .on('click', function() {
-	            window.scrollQueue();
-	        });
-
-
-	    this.showVideoContributorsList = function () {
-	        var $header = $('<h3 class="modal-title">').text(app.t('video[.]Contributors\' list'));
-	        var $bodyWrapper = $('<div>');
-
-	        var contributorsList = {};
-	        $('#queue').find('.queue_entry').each(function () {
-	            var username = $(this).attr('title').replace('Added by: ', '');
-
-	            if (contributorsList[username] === undefined) {
-	                contributorsList[username] = 1;
-	            } else {
-	                contributorsList[username] += 1;
-	            }
-	        });
-
-	        $bodyWrapper.append($('<p>' + app.t('video[.]Video\'s count') + ': ' + ($('#queue').find('.queue_entry').length + 1) + '</p>'));
-
-	        var $contributorsListOl = $('<ol>');
-	        for (var contributor in contributorsList) {
-	            if (contributorsList.hasOwnProperty(contributor)) {
-	                $contributorsListOl.append($('<li>' + contributor + ': ' + contributorsList[contributor] + '.</li>'));
-	            }
-	        }
-	        $contributorsListOl.appendTo($bodyWrapper);
-
-	        app.UI.createModalWindow('video-contributors-list', $header, $bodyWrapper);
-	    };
-	    this.$videoContributorsBtn = $('<button id="video-contributors-btn" class="btn btn-sm btn-default" title="' + app.t('video[.]Contributors\' list') + '">')
-	        .append('<span class="glyphicon glyphicon-user">')
-	        .prependTo('#videocontrols')
-	        .on('click', function() {
-	            that.showVideoContributorsList();
-	        });
-	    if (!settings.showVideoContributorsOption) {
-	        this.$videoContributorsBtn.hide();
-	    }
-	});
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-	window.cytubeEnhanced.addModule('videoResize', function (app, settings) {
-	    'use strict';
-	    var that = this;
-
-	    var defaultSettings = {
-	        turnedOn: true
-	    };
-	    settings = $.extend({}, defaultSettings, settings);
-
-	    
-	    function setWight() {
-	        var self = this;
-
-	        self.ARROW = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADZJREFUeNpiYBgFVAfzoZhoeSYsihJwGDIfKkeUK/6jGYJNjGhDSNaMbghZmokN1FFADQAQYACgYhHrEaVEsQAAAABJRU5ErkJggg==';
-	        self.COLCOUNT = 12;
-	        self.PREFIX = 'set-width-';
-	        self.AUTHOR = 'dfdfg';
-
-	        self.positions = [];
-	        self.mode = 'show';
-
-
-	        self.checkPosition = function() {
-	            var chatwrap = document.getElementById('chatwrap'),
-	                videowrap = document.getElementById('videowrap');
-	            if(chatwrap.nextSibling == videowrap){
-	                self.positions = [chatwrap, videowrap];
-	            } else {
-	                self.positions = [videowrap, chatwrap];
-	            }
-
-	            var pos1 = $(chatwrap).position().top,
-	                pos2 = $(videowrap).position().top;
-	            return pos1 == pos2;
-	        };
-
-
-	        self.addHtml = function() {
-	            var htmlArr = [];
-	            htmlArr.push('<div id="' + self.PREFIX + 'wrap" style="top: -17px; position: relative; height: 0px;line-height: 0px;">');
-	            for (var i = 1; i < self.COLCOUNT; i++) {
-	                htmlArr.push('<div style="left: ' + (100 * i / self.COLCOUNT) + '%; position: relative;height: 0px;">');
-	                htmlArr.push('<img id="' + self.PREFIX + 'arrow-' + i + '" class="' + self.PREFIX + 'arrow" src="' + self.ARROW + '" style="cursor: pointer; margin-left: -8px; background-color:rgba(255,255,255,0.1); border-radius: 8px;">');
-	                htmlArr.push('</div>');
-	            }
-	            htmlArr.push('</div>');
-
-	            $("#main").prepend(htmlArr.join("\n"));
-	        };
-
-	        self.hide = function(num) {
-	            num = num || -1;
-	            if(num == -1){
-	                var clsName = self.positions[0].getAttribute('class');
-	                num = clsName.substr(clsName.lastIndexOf('-') + 1);
-	            }
-	            for (var i = 1; i < self.COLCOUNT; i++) {
-	                if(i != num){
-	                    $('#' + self.PREFIX + 'arrow-' + i).parent().hide();
-	                }
-	            }
-	            self.mode = 'hide';
-	        };
-
-	        self.show = function(num) {
-	            $('.' + self.PREFIX + 'arrow').parent().show();
-	            self.mode = 'show';
-	        };
-
-	        self.setHandlers = function() {
-	            $('.' + self.PREFIX + 'arrow').click(function(eventObject) {
-	                if(self.mode == 'show'){
-	                    var id = eventObject.currentTarget.id,
-	                        num = id.substr(id.lastIndexOf('-') + 1),
-	                        num2 = self.COLCOUNT - num;
-	                    var next = $('#' + self.PREFIX + 'wrap').next();
-
-	                    app.storage.set('chatWidthInColumns', num);
-
-	                    next.attr('class', 'col-lg-'+num+' col-md-'+num);
-	                    next = next.next();
-	                    next.attr('class', 'col-lg-'+num2+' col-md-'+num2);
-
-	                    self.hide(num);
-
-	                    window.handleWindowResize();
-
-	                    return;
-	                }
-	                // else
-	                self.show();
-	            });
-	        };
-
-	        self.loadPosition = function () {
-	            var columnNumber = app.storage.get('chatWidthInColumns');
-	            if (columnNumber) {
-	                $('#' + q.PREFIX + 'arrow-' + columnNumber).trigger('click').load(function () {
-	                    $(this).trigger('click');
-	                });
-	            }
-	        };
-
-	        self.create = function() {
-	            $('#' + self.PREFIX + 'wrap').remove();
-	            if (!self.checkPosition()) {
-	                return;
-	            }
-	            self.addHtml();
-	            self.setHandlers();
-	            self.hide();
-	            self.loadPosition();
-	        };
-	    }
-
-
-	    if (settings.turnedOn) {
-	        app.storage.setDefault('chatWidthInColumns', 5);
-
-	        var q = new setWight();
-	        q.create();
-	    }
-	});
-
-
-/***/ }),
-/* 34 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	/**
@@ -20951,7 +18773,7 @@
 
 
 /***/ }),
-/* 35 */
+/* 20 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
@@ -20964,7 +18786,7 @@
 	});
 
 /***/ }),
-/* 36 */
+/* 21 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
@@ -20977,7 +18799,7 @@
 	});
 
 /***/ }),
-/* 37 */
+/* 22 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('extras').done(function (extraModules) {
@@ -20991,7 +18813,7 @@
 	});
 
 /***/ }),
-/* 38 */
+/* 23 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
@@ -21005,7 +18827,7 @@
 	});
 
 /***/ }),
-/* 39 */
+/* 24 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
@@ -21019,7 +18841,7 @@
 	});
 
 /***/ }),
-/* 40 */
+/* 25 */
 /***/ (function(module, exports) {
 
 	window.cytubeEnhanced.getModule('themes').done(function (extraModules) {
@@ -21033,7 +18855,7 @@
 	});
 
 /***/ }),
-/* 41 */
+/* 26 */
 /***/ (function(module, exports) {
 
 	/*

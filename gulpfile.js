@@ -16,8 +16,8 @@ var sass = require('gulp-sass');
 
 
 var jsFilesGlobs = {
-    ru: ['./src/translations/ru.js', './src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-ru.js', './src/js/modules/**/*.js', './extras/**/config.js', './themes/**/config.js'],
-    en: ['./src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-en.js', './src/js/modules/**/*.js', './extras/**/config.js', './themes/**/config.js']
+    ru: ['./src/translations/ru.js', './src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-ru.js', './src/js/modules-build/**/*.js', './extras/**/config.js', './themes/**/config.js'],
+    en: ['./src/js/core/**/*.js', './src/js/main/main.js', './src/js/main/main-en.js', './src/js/modules-build/**/*.js', './extras/**/config.js', './themes/**/config.js']
 };
 var cssFilesGlob = ['./src/css/main.scss'];
 var buildForLangs = ['ru', 'en'];
