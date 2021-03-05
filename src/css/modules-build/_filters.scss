@@ -1,0 +1,23 @@
+.cirno {
+  color: #37B1E6;
+}
+
+.quote {
+  color: #6F8F23;
+}
+
+
+.spoiler {
+  color: #000;
+  background-color: #000;
+}
+.spoiler * {
+  visibility: hidden !important;
+}
+.spoiler:hover * {
+  visibility: visible !important;
+}
+
+code {
+  color: #2CB337;
+}

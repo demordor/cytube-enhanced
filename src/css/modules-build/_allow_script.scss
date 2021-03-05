@@ -1,0 +1,133 @@
+
+/**
+ * Prompt
+ */
+#chanjs-allow-prompt {
+  a, .close {
+    display: none;
+  }
+
+  span, div.checkbox > label {
+    font-size: 0px;
+  }
+
+  span {
+    &::after {
+      content: 'Для корректной работы канала требуются специальные функции';
+      font-size: 14px !important;
+    }
+  }
+
+  div.checkbox > label {
+    &::after {
+      content: 'запомнить выбор';
+      font-size: 14px !important;
+    }
+  }
+}
+
+/**
+ * Image
+ */
+#chatwrap > div.profile-box {
+  position: fixed !important; 
+  left: 150px !important; 
+  z-index: 10 !important;
+  top: calc(100vh - 200px) !important;
+  border-radius: 25px;
+
+  &::after {
+    content: '';
+    padding-left: 134px !important;
+    z-index: 10 !important;
+    position: fixed;width: 192px;
+    height: 200px;
+    left: -7px!important;
+    bottom: 0px;
+    background-size: cover;
+    background-color: rgba(0, 0, 0,0.0)!important;
+    background-image: url('https://i.imgur.com/YEJNO2u.png') !important;
+  }
+}
+
+/**
+ * Allow
+ */
+#chanjs-allow {
+  font-size: 30px;
+  background-color: green;
+  margin-bottom: 5px;
+  border-radius: 15px; 
+  background-image: linear-gradient(#003232,#003232,#003232);
+
+  &:hover {
+    &::after {
+      font-size: 10px !important;
+      content: ""; 
+      color: black; 
+      padding-left: 130px !important;
+      z-index: 101 !important;
+      position: fixed;
+      left:100px;
+      height: 154px;
+      bottom: 136px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: rgba(0, 0, 0,0.0)!important;
+      background-image: url('https://i.imgur.com/nw64jST.png') !important;
+    }
+  }
+
+
+}
+
+/**
+ * Deny
+ */
+#chanjs-deny {
+  font-size: 0px;
+  border-radius: 15px; 
+  background-image: linear-gradient(#f00,#f00,#f00);
+
+  &::before {
+    font-size: 14px !important;content: 'Отказаться';
+  }
+
+  &:hover {
+    &::after {
+      font-size: 10px !important;
+      content: ""; 
+      color: black; 
+      padding-left: 140px !important;
+      z-index: 101 !important;
+      position: fixed;
+      left:100px;
+      height: 154px;
+      bottom: 136px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: rgba(0, 0, 0,0.0)!important;
+      background-image: url('https://i.imgur.com/DTRV1vT.png') !important;
+    }
+  }
+}
+
+
+@media (max-width: 992px){
+  #chatwrap > div.profile-box {
+    left: calc(100vw - 205px) !important;
+    top: calc(100vh - 220px) !important;
+  }
+
+  .profile-box {
+    background: black !important;
+  }
+  #chanjs-deny:hover:after, #chanjs-allow:hover:after, #chanjs-allow-prompt > div.checkbox:hover:after{
+    left:30px;
+    height: 154px;
+    bottom: 80px;
+  }
+}
+
+
+

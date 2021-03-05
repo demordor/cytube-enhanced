@@ -1,0 +1,13 @@
+#smiles-panel {
+  text-align: center;
+  margin: 4px 10px 10px;
+  border: 2px solid rgba(0, 10, 20, .75);
+  background-color: rgba(0, 10, 20, .3);
+  border-radius: 6px;
+}
+#smiles-panel img {
+  margin: 5px;
+  max-height: 40px;
+  max-width: 80px;
+  cursor: pointer;
+}

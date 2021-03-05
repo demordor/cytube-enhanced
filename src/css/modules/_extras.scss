@@ -1,0 +1,37 @@
+.ce-extras {
+  font-size: 0;
+
+  .col-sm-6 {
+      width: 50%;
+      display: inline-block;
+      vertical-align: top;
+      float: none;
+  }
+
+  &__item {
+      font-size: 14px;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-top: 1px solid #555;
+      &__title {
+          font-size: 16px;
+          display: block;
+          &_link {
+              text-decoration: underline;
+              &:hover {
+                  text-decoration: none;
+              }
+          }
+      }
+      &__description {
+          color: #ccc;
+      }
+      &__button {
+          margin-top: 4px;
+      }
+  }
+
+  &__info-message {
+      margin: 10px 0;
+  }
+}

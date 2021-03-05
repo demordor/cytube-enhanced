@@ -1,0 +1,39 @@
+.ce-themes {
+  &__item {
+      position: relative;
+      height: 100px;
+      width: 100%;
+      margin-bottom: 10px;
+      background: #000000;
+      cursor: pointer;
+      &__title {
+          position: absolute;
+          left: 0;
+          top: 0;
+          font-size: 16px;
+          color: #ffffff;
+          background: rgba(0, 0, 0, 0.8);
+          padding: 10px;
+          z-index: 5;
+      }
+      &__picture {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: top right;
+          background-repeat: no-repeat;
+      }
+  }
+
+  &__item.active {
+      border: 1px solid #78cc78;
+      cursor: auto;
+  }
+
+  &__info-message {
+      margin: 10px 0;
+  }
+}
