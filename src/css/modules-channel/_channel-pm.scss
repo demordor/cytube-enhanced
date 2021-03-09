@@ -1,0 +1,27 @@
+/* Default header */
+.panel-default>.panel-heading {
+  color: rgb(0 255 255 / 100%);
+  background-color: hsl(0deg 0% 0% / 60%);
+}
+
+/* Highlighted */
+.panel-primary>.panel-heading {
+  background-color: rgb(0, 255, 255 / 50%) !important;
+  color: #000000;
+}
+
+.panel-body {
+  background: transparent url(https://i.imgur.com/7ebisSl.png);
+  font-family: Verdana;
+
+  /* Timestamp */
+  .timestamp {
+    // display: none
+    color: #ffffff80;
+  }
+
+  /* Username */
+  .username {
+    color: #00ffff; font-family: Arial; text-shadow: none
+  }
+}

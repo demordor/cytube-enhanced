@@ -1,3 +1,8 @@
+/*****************/
+/* G E N E R A L */
+/* M O D U L E S */
+/*****************/
+
 /**
  * Allow script
  */
@@ -15,6 +20,7 @@
  */
 @import './modules-build/chat-history';
 @import './modules-build/favourite-pictures';
+@import './modules-build/smiles';
 
 /**
  * MOTD
@@ -30,8 +36,70 @@
  */
 @import './modules-build/vjs';
 @import './modules-build/spinner';
+@import './modules-build/scroll-chat';
+
 
 /**
  * MISC
  */
 @import './modules-build/misc';
+
+/**
+ * Mobile version
+ */
+@import './modules-build/mobile';
+
+
+
+
+/*****************/
+/* C H A N N E L */
+/* M O D U L E S */
+/*****************/
+
+
+/**
+ * Channel general
+ */
+@import './modules-channel/channel-general';
+
+/**
+ * Channel MOTD
+ */
+@import './modules-channel/channel-motd';
+
+/**
+ * Channel NavBar
+ */
+@import './modules-channel/channel-navbar';
+
+/**
+* Channel title
+*/
+@import './modules-channel/channel-title';
+
+/**
+* Channel title
+*/
+@import './modules-channel/channel-login';
+
+
+/**
+* Channel chat
+*/
+@import './modules-channel/channel-chat';
+
+/**
+* Channel chat
+*/
+@import './modules-channel/channel-glyphicons';
+
+/**
+* Channel playlist
+*/
+@import './modules-channel/channel-playlist';
+
+/**
+* Channel playlist
+*/
+@import './modules-channel/channel-mobile';

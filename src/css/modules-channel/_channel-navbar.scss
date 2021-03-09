@@ -1,0 +1,36 @@
+.navbar-inverse {
+
+  position: relative;
+  margin-bottom: 0px;
+  min-height: 3em;
+
+  /* Nav logo */
+  .navbar-header {
+    a > img {
+      max-height: 30px;
+      margin: 5px 0 0 5px;
+      content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAAXNSR0IB2cksfwAAALpQTFRFAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8hwkwQAAAD50Uk5TAFBvBlrr83UKRP9cya/8vSAUpfk2E1mrj+HPu+0k5CI81+cYGiw0+/6z33Aw3RtgfI2jEvaTtNtUA0KLXksXHU4mAAABJklEQVR4nJWTa1fCMAyGi5M54mArLQKKggqCdcMbqEP9/3/LpC2j7nY0H3aa8y5vnqQbY/+J1lGD6B23/ZOgVu60AfzTWmdUUa/xb6EWdvFRqaNzL4p5X1T6S3SOBowFffQ/q6IKYzrxbpmPqIaeTUZFvs4Y4DzeZ/wCYOLUX2Lt1fSQ8xDrZ7l6jbWOaupvZn+T7ciOWhi+Ga1xsNs5q1wLX1A6iPRMpaXycHxHVkvTtnAlCLC6pzJl2z7gXQ6xL4wsgJJ0SFLb1vkcCCBNDNs6NW3Z4xJg9cQMQLresydKryV4JvnlVa9FJYex5Qb9va0g896bh84b6a6F+N6J6kPog/qlGj5NRS/mVHlkOwXiE3+B7GsCapexYkix1T9I9u3LklgTP5QAGrUfc8IsAAAAAElFTkSuQmCC") !important;
+    }
+  }
+
+  /* Top text style */
+  .navbar-nav>li>a, .navbar-text, .navbar-link {
+    font-family: Impact;
+    font-size: 16px;
+    color: rgba(255,255, 255, 0.3);
+    text-shadow: 4px 5px 6px black;
+  }
+
+  /* Padding to the links */
+  .navbar-nav > li > a {
+    padding: 5px 5px;
+  }
+
+  /* Nav middle image */
+  #nav-collapsible {
+    background-image: url(https://i.imgur.com/JX5bhG9.png); 
+    background-position: center;
+    background-size: contain; 
+    background-repeat: no-repeat
+  }
+}

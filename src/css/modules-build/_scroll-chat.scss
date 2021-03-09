@@ -1,0 +1,45 @@
+#newmessages-indicator-bghack {
+  width: 32px;
+  height: 32px;
+  float: right;
+  background: rgba(200, 200, 200, 0.25);
+  border-radius: 50%;
+  font-size: 1.10em;
+  bottom: 2px;
+  line-height: 2.4em;
+
+  &:hover {
+    background: rgba(200, 200, 200, 0.5);
+  }
+}
+
+#newmessages-indicator {
+  width: 98%;
+  bottom: 4px;
+  position: relative;
+
+  span {
+    /* Disable first arrow */
+    &:nth-child(1):not(:last-child) {
+      display: none !important;
+    }
+
+    /* Disable text */
+    &:nth-child(2) {
+      display: none !important;
+    }
+
+    /* Arrow button */
+    &:last-child {
+      position: relative;
+      left: 1px;
+      margin: 0;
+      opacity: 0.8;
+      transition: opacity 0.3s ease-out; 
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

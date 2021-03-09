@@ -1,0 +1,22 @@
+#loginform {
+  background-color: transparent !important;
+}
+
+#logoutform {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+#login {
+  background-color: #004646 !important;
+  font-size: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  &::before {
+    content: "ОК";
+    font-size: 14px
+  }
+}

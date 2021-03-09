@@ -1,0 +1,190 @@
+#chatwrap {
+  #chatheader {
+    border-width: 1px 1px 1px 0px;
+  
+    #userlisttoggle {
+      padding-left: 8px;
+    }
+
+    #usercount {
+      color: #ffffff;
+    }
+  }
+
+  /* Userlist */
+  #userlist {
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    border-right: none !important;
+    width: 100px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    
+    .userlist_item {
+      .userlist_owner, .userlist_op {
+        color: #ffffff !important;
+        font-weight: 400 !important;
+      }
+
+      .user-dropdown {
+        background-color: rgba(0,0,30,1);
+
+        strong {
+          color:cyan;
+        }
+
+        .btn-group-vertical {
+          button {
+            background-color: black;
+          }
+        }
+      }
+
+      .profile-box {
+        background-color: rgba(0,0,30,1) !important;
+        box-shadow: 1px 1px 10px black;
+        border-radius: 1em !important;
+        min-width: 225px;
+        max-width: 225px;
+        width: 225px;
+
+        strong {
+          color:cyan;
+        }
+
+        .profile-image {
+          border-radius: 50%;
+          float: left;
+          margin-right: 10px;
+          border-width: 2px !important;
+          border-color: rgba(75, 175, 255, 0.75) !important;
+          box-shadow:  0 1px 1px rgba(5, 75, 175, 0.175),
+                       0 0 8px rgba(75, 175, 255, 0.75) !important;
+        }
+      }
+    }
+  }
+
+  // /* Profile box (allow script) */
+  // .profile-box  {
+  //   background-color: rgba(0,0,30,1) !important;
+
+  //   strong {
+  //     color:cyan
+  //   }
+  // }
+
+  /* Chat */
+  #messagebuffer {
+    background-color: rgba(0,0,0,0.4);
+    overflow: auto
+  }
+
+  #guestlogin {
+    #guestname {
+      background-color: rgba(0,0,10,0.7) !important
+    }
+    
+    .input-group-addon {
+      // background-color: rgb(0,0,10,0.7);
+      background-color: gold;
+      color: black;
+    }
+  }
+
+  #chatline {
+    background-color: rgba(0,0,10,0.7) !important
+  }
+}
+
+
+
+/* Messages */
+.server-msg-reconnect {
+  color: #efefef !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
+}
+
+.poll-notify {
+  color: #ffffff !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
+}
+
+.shout {
+  color: #ffffff !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 10px #0000FF, 0 0 20px #0000FF, 0 0 30px #0000FF, 0 0 40px #0000FF, 0 0 50px #0000FF;
+}
+
+.action {
+  font-style: italic;
+  color: #fb89e3;}
+
+.server-msg-disconnect {
+  color: #ffffff !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000;
+}
+
+.drink {
+  color: #ffffff !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 10px #0000cc, 0 0 20px #0000cc, 0 0 30px #0000cc, 0 0 40px #0000cc, 0 0 50px #0000cc;
+}
+
+/* Addressed message */
+.nick-highlight {
+	background-color: rgba(25,100,225,0.3) !important
+}
+
+/* Highlight author */
+.nick-hover {
+  background-color: hsla(215, 25%, 10%, 0.5);
+}
+
+/* Username in chat */
+.username {
+	text-shadow:
+	#000 1px 1px 0,
+	#000 2px 2px 0,
+	#000 3px 3px 0,
+	#000 3px 3px 0;
+	}
+
+.username:active {
+  text-shadow:
+    black 1px 1px 0,
+    black -1px -1px 0,
+    black -1px 1px 0,
+    black 1px -1px 0;
+}
+
+/* Timestamp */
+.timestamp {
+	font-size: 0.7em;
+  font-family: Trebuchet MS;
+}
+
+
+
+
+
+/* Send button */
+#send-btn {
+  background-color: rgb(0,50,50); 
+  border-color: rgba(0,0,0,0.5) !important
+}
+
+/* Override emotes */
+.channel-emote {
+  max-height: 70px;
+  max-width: 220px;
+}
+
+/* Override pictures */
+.chat-picture {
+  max-height: 100px;
+  max-width: 200px; 
+}

@@ -1,0 +1,43 @@
+#currenttitle {
+  font-family: Verdana; 
+  font-size: 12pt; 
+  border: 1px solid rgb(0, 0, 0);
+  border-width: 1px 0px 1px 0px;
+  margin-bottom: 15px !important;
+  margin-top: 0px !important;
+
+  background-color: rgba(0,0,10,0.5);
+
+  overflow-wrap: break-word;
+  height: auto;
+}	
+
+/* If JS is enabled */
+#titlerow > #titlerow-outer{
+  padding: 0;
+
+  #currenttitle{
+    font-size: 14pt; 
+    border-width: 1px 0px 0px 0px;
+    padding: 10px 0 10px;
+    margin: 0 !important;
+    width: 100%;
+    font-weight: bold; 
+  }
+}
+
+/* Else */
+#videowrap > #currenttitle{
+  margin-block-end: 0em !important;
+  padding: 3px 0;
+}
+
+#mediainfo {
+  border: 1px solid #000000;
+  border-width: 1px 0px 1px 0px;
+  border-radius: 0;
+  background-color: rgba(0,0,10,0.5);
+  padding-top: 4px;
+  text-align: center;
+  height: 30px;
+}

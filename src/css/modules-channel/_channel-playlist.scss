@@ -1,0 +1,41 @@
+.queue_entry {
+  border-color: #cccccc14;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: rgba(0,0,0,0.6) !important;
+}
+
+.queue_temp {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAAAXNSR0IB2cksfwAAAAZQTFRFAP//AAAAsQZ4sgAAAAJ0Uk5TDQDDPbN1AAAADklEQVR4nGNIYEhgYAAAAwYAwf4lup0AAAAASUVORK5CYII=");
+}
+
+#queue li a {
+  font-family: verdana;
+}
+
+#plmeta {
+  border: none;
+  padding: 2px 10px 0px 10px !important;
+}
+
+
+/* Alerts */
+.alert-danger {background:url('https://i.imgur.com/QvyJtQq.png');
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  border: 3px solid #ee5f5b;
+}
+
+.alert-warning {background:url('https://i.imgur.com/3KkMstM.png');
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  border: 3px solid #f88114bf;
+}
+
+#skipLockButton {
+  border-color: rgba(0,0,0,0.7)
+}

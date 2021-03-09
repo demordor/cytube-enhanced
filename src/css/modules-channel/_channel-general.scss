@@ -1,0 +1,281 @@
+/* Background */
+#wrap {
+  background: transparent url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAAAXNSR0IB2cksfwAAAAZQTFRFAP//AAAAsQZ4sgAAAAJ0Uk5TDQDDPbN1AAAADklEQVR4nGNIYEhgYAAAAwYAwf4lup0AAAAASUVORK5CYII=");
+}
+
+body {
+  background: linear-gradient(225deg, hsl(240, 40%, 30%), rgba(255,0,0,0) 75.0%),            
+              linear-gradient(125deg, hsl(180, 100%, 5%), rgba(0,255,0,0) 75.0%),            
+              linear-gradient(335deg, hsl(0, 0%, 0%), rgba(0,0,255,0) 75.0%);
+  background-attachment: fixed;
+  background-size: cover;
+  color: #ffffff;
+  background-color: #00001e;
+}
+
+#mainpage {
+  padding-top: 0px !important;
+}
+
+/* Remove sides padding */
+#videowrap {
+  padding: 0;
+}
+
+#chatwrap {
+  padding-left: 0; 
+  padding-right: 0;
+}
+
+.container-fluid {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.well {
+  hr {
+    border-color: hsla(0, 0%, 25%, 1);
+  }
+}
+
+
+/* Scrollbar */
+/* Disable arrows up/down */
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+/* Remove corner */
+::-webkit-scrollbar-corner {
+  background: 0 0;
+}
+
+/* Width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(40, 40, 40);
+  border: 0 black;
+}
+::-webkit-scrollbar-thumb {
+  background: black;
+  border: 2px solid cyan;
+  border-width: 2px 0px 2px 0px;
+
+  &:hover {
+    border: 4px solid cyan;
+    border-width: 4px 0px 4px 0px;
+  }
+}
+
+/* Disable on mobile */
+@media(max-width: 992px){
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+}
+
+
+/* Scrollchat button */
+#newmessages-indicator-bghack {
+  background: rgba(25, 25, 200, 0.25);
+
+  &:hover {
+    background: rgba(25, 25, 200, 0.5);
+  }
+}
+
+
+/* Input field glow */
+.form-control:focus {
+  box-shadow: inset 0 1px 1px rgba(5, 75, 175, 0.175), 
+              inset 0 0 4px rgba(75, 175, 255, 0.75);
+}
+
+
+
+
+/* Buttons */
+.label-success {
+	background-color: rgba(25, 25, 200, 0.3)
+}
+
+.label-info {
+	background-color: rgba(25, 25, 200, 0.3) !important
+}
+
+.label-default {
+	background-color: rgba(0, 0, 0, 0.3)
+}
+
+
+.btn-danger {
+  background-color: #7a221f !important;
+}
+
+.btn-info {
+  background-color: #2e5d6b !important;
+}
+
+.btn-success {
+  background-color: #2e6b2e !important;
+}
+
+.btn-default {
+  background-color: rgba(0,0,0,0.5);
+}
+
+#voteskip, #queue_end, #ce_queue_end, #youtube_search {
+  background-color: rgba(0,50,50,1) !important;
+}
+
+// .btn:hover, .btn-default:hover, .btn-danger:hover, .btn-info:hover, .btn-success:hover, #skipLockButton:hover {
+//     border-color: white
+// }
+
+/* Disable outline on focus */
+*:focus {
+  outline: none !important;
+}
+
+/* Remove controls padding */
+#controlsrow {
+  margin-top: 8px;
+
+  #leftcontrols, #rightcontrols {
+    padding: 0;
+  }
+}
+
+#rightpane {
+  padding: 0;
+
+  #rightpane-inner {
+    &:last-child div {
+      padding: 0;
+    }
+  }
+}
+
+#leftpane {
+  padding: 0;
+  margin: 0 !important;
+}
+
+/* Headers */
+#chatheader, #videowrap-header, #plmeta, #motdwrap, #userlist, #nav-collapsible, .well {
+	background-color: rgba(0,0,10,0.5) !important
+}
+
+/* Credits */
+#footer {
+  background: linear-gradient(45deg, rgb(0, 0, 20), rgb(0, 10, 10));
+
+  min-height: 30px;
+  padding-top: 5px;
+  margin-top: 20px;
+  
+  p {
+    opacity: 0.3;
+    margin: 0;
+  }
+}
+
+/* Modal window */
+.modal-content {
+  background: rgb(0, 0, 0 / 70%);
+}
+
+/* Input field */
+.form-control {
+  background-color: rgba(0,0,10,0.5) !important;
+}
+
+
+/* Drinkpanel */
+#drinkcount {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: all ease 0.9s;
+
+  &::before {
+    content: url(https://i.imgur.com/PwV7YW6.png);
+  }
+}
+
+
+
+
+/* Emotes and favpics */
+.panelemote {
+  width: auto !important;
+}
+
+
+
+/* Bot */
+// .aye-bot-name {
+//   content: url(https://i.imgur.com/KTcv6hp.png);
+//   max-height: 60px;
+// }
+
+
+/* Left nael margin top */
+#leftpane {
+  margin-top: 10px;
+}
+
+/* FAV PICS */
+
+#favourite-pictures-panel img {
+  transition: all 0.075s ease-out;
+}
+
+#favourite-pictures-panel img:hover {
+  transform: scale(1.7);
+}
+
+#pictures-trash {
+  text-align: start;
+
+  &:hover {
+    background: hsl(0, 75%, 35%);
+  }
+}
+
+
+// #nav-collapsible > ul > li:nth-child(4), #chat-help-btn, #ce-ui, #modflair  {
+  /* Hide chat/video */
+  /* Enchanced settings */
+// 	display: none !important
+// }
+
+/* Disable success color on video controls? */
+// #videocontrols > .btn-success {
+//   background-color: rgba(0,0,0,0.5) !important;
+// }
+
+
+/* MSG DELETE */
+
+// .btn-msg-delete {
+// 	background-color: transparent !important;
+//     border-color: transparent !important;
+// }
+
+// .btn-msg-delete {
+//   opacity: 0.5 !important
+// }
+
+// .btn-msg-delete:hover {
+//   opacity: 1 !important
+// }
+
+

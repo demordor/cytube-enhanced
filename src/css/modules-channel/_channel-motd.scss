@@ -1,0 +1,65 @@
+#motdrow {
+  .col-sm-12, .col-md-12, .col-lg-12{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+#motdwrap {
+  min-height: 32px;
+  margin-bottom: 0px;
+  padding: 0px 0px !important;
+  border: none;
+  background-color: rgba(0,0,10,0.5) !important;
+}
+
+#motd-tabs-wrapper {
+  margin: 0 0 5px 5px;
+}
+
+#motd-tabs {
+  text-align: left !important;
+
+  * {
+    margin-bottom: -10px;
+  }
+}	
+
+/* Override */
+#motd-tabs-content {
+  margin-top: 4px;
+}
+
+.motd-tab-content {
+  padding: 0% 5% 5% 5%;
+}
+
+.motd-tab-btn {
+  padding: 2px 8px 2px 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-family: Verdana;
+  color: #ccc;
+}
+
+#togglemotd {
+  margin-right: 15px;
+  color: white;
+  text-shadow: none;
+
+  .glyphicon-minus, .glyphicon-plus{
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.modal-body {
+  background: rgb(0, 0, 0 / 70%);
+}
+
