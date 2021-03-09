@@ -2,3 +2,19 @@
 @media(max-width: 992px){
 
 }
+
+@media (max-width: 768px){
+  #userlist, #messagebuffer {
+      height: 50vh !important;
+  }
+
+  #userlist {
+    width: 80px;
+  }
+}
+
+@media (min-width: 768px){
+  #userlist {
+    width: 100px;
+  }
+}
