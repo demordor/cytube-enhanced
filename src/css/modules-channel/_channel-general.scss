@@ -232,23 +232,7 @@ body {
   margin-top: 10px;
 }
 
-/* FAV PICS */
 
-#favourite-pictures-panel img {
-  transition: all 0.075s ease-out;
-}
-
-#favourite-pictures-panel img:hover {
-  transform: scale(1.7);
-}
-
-#pictures-trash {
-  text-align: start;
-
-  &:hover {
-    background: hsl(0, 75%, 35%);
-  }
-}
 
 
 // #nav-collapsible > ul > li:nth-child(4), #chat-help-btn, #ce-ui, #modflair  {

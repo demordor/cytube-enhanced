@@ -7,7 +7,7 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
 
 
     if ($('#chat-panel').length === 0) {
-        $('<div id="chat-panel" class="row">').insertAfter("#main");
+        $('<div id="chat-panel" class="row">').insertAfter("#controlsrow");
     }
     
     if ($('#chat-controls').length === 0) {
@@ -32,6 +32,11 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
         this.$smilesPanelPrimary = $('<div id="smiles-panel-primary" class="col-sm-12 col-md-12 col-lg-12 well">')
             .prependTo('#chat-panel')
             .hide();
+    }
+
+    if(app.isModulePermitted('favouritePictures') && $('#favourite-pictures-panel').length !== 0) {
+        this.$smilesPanelSecondary.insertAfter($('#favourite-pictures-panel'));
+        this.$smilesPanelPrimary.insertAfter($('#favourite-pictures-panel'));
     }
     
 
@@ -98,19 +103,19 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
             that.renderPrimarySmiles();
         }
 
-        var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false; //setted up by userConfig module
+        // var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false; //setted up by userConfig module
 
-        if ($('#favourite-pictures-panel').length !== 0 && !smilesAndPicturesTogether) {
-            $('#favourite-pictures-panel').hide();
-        }
+        // if ($('#favourite-pictures-panel').length !== 0 && !smilesAndPicturesTogether) {
+        //     $('#favourite-pictures-panel').hide();
+        // }
 
         that.$smilesPanelPrimary.toggle();
 
-        if (!smilesAndPicturesTogether) {
+        // if (!smilesAndPicturesTogether) {
             if (that.$smilesBtn.hasClass('btn-default')) {
-                if ($('#favourite-pictures-btn').length !== 0 && $('#favourite-pictures-btn').hasClass('btn-success')) {
-                    $('#favourite-pictures-btn').removeClass('btn-success').addClass('btn-default');
-                }
+                // if ($('#favourite-pictures-btn').length !== 0 && $('#favourite-pictures-btn').hasClass('btn-success')) {
+                //     $('#favourite-pictures-btn').removeClass('btn-success').addClass('btn-default');
+                // }
 
                 that.$smilesBtn.removeClass('btn-default');
                 that.$smilesBtn.addClass('btn-success');
@@ -118,7 +123,7 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
                 that.$smilesBtn.removeClass('btn-success');
                 that.$smilesBtn.addClass('btn-default');
             }
-        }
+        // }
     };
 
     this.showSmilesPanelSecondary = function () {
@@ -130,11 +135,11 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
             that.renderSecondarySmiles();
         }
 
-        var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false; //setted up by userConfig module
+        // var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false; //setted up by userConfig module
 
-        if ($('#favourite-pictures-panel').length !== 0 && !smilesAndPicturesTogether) {
-            $('#favourite-pictures-panel').hide();
-        }
+        // if ($('#favourite-pictures-panel').length !== 0 && !smilesAndPicturesTogether) {
+        //     $('#favourite-pictures-panel').hide();
+        // }
 
         that.$smilesPanelSecondary.toggle();
     };
@@ -158,9 +163,9 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
     });
 
 
-    this.makeSmilesAndPicturesTogether = function () {
-        that.smilesAndPicturesTogether = true;
-        that.$smilesBtn.hide();
-        that.$smilesPanel.hide();
-    };
+    // this.makeSmilesAndPicturesTogether = function () {
+    //     that.smilesAndPicturesTogether = true;
+    //     that.$smilesBtn.hide();
+    //     that.$smilesPanel.hide();
+    // };
 });

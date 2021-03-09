@@ -2,20 +2,42 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     'use strict';
     var that = this;
 
+    
+    /**********/
+    /* LAYOUT */
+    /**********/
+
+
+    /**
+     * Load pictures from local Storage
+     */
     var favouritePicturesFromV1 = app.parseJSON(window.localStorage.getItem('favouritePictures'), []);
     app.storage.setDefault('favouritePictures', _.isArray(favouritePicturesFromV1) ? favouritePicturesFromV1 : []);
 
+    /**
+     * Check if chat-panel and chat-controls initialized
+     */
     if ($('#chat-panel').length === 0) {
-        $('<div id="chat-panel" class="row">').insertAfter("#main");
+        $('<div id="chat-panel" class="row">').insertAfter("#controlsrow");
     }
 
     if ($('#chat-controls').length === 0) {
-        $('<div id="chat-controls" class="btn-group">').appendTo("#chatwrap");
+        $('<div id="chat-controls" class="btn-group">').insertBefore('#newpollbtn');
     }
 
 
-    this.$toggleFavouritePicturesPanelBtn = $('<button id="favourite-pictures-btn" class="btn btn-sm btn-default" title="' + app.t('favPics[.]Show your favorite images') + '">')
-        .html('<i class="glyphicon glyphicon-th"></i>');
+    /**
+     * Create toggle button
+     */
+    if($('#favourite-pictures-btn').length === 0)
+    {
+        this.$toggleFavouritePicturesPanelBtn = $(`<button id="favourite-pictures-btn" class="btn btn-sm btn-default" title="${app.t('favPics[.]Show your favorite images')}">`)
+            .html('<i class="glyphicon glyphicon-folder-open"></i>');
+    }
+
+    /**
+     * Check if smiles button initialized
+     */
     if ($('#smiles-btn').length !== 0) {
         this.$toggleFavouritePicturesPanelBtn.insertAfter('#smiles-btn');
     } else {
@@ -23,50 +45,91 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     }
 
 
+    /**
+     * Create panel
+     */
+    if($('#favourite-pictures-panel').length === 0)
+    {
+         this.$favouritePicturesPanel = $('<div id="favourite-pictures-panel">')
+             .appendTo('#chat-panel')
+             .hide();
+
+        if($('#smiles-panel-primary').length !== 0) {
+            this.$favouritePicturesPanel.insertBefore($('#smiles-panel-primary'));
+        }
+    }
+
+    
+
+	/**
+	 * Create row
+	 */
+    if($('#favourite-pictures-panel-row').length === 0)
+    {
+        this.$favouritePicturesPanelRow = $('<div class="favourite-pictures-panel-row">')
+            .appendTo(this.$favouritePicturesPanel);
+    }
+
+	/**
+	 * Create trash icon
+	 */
+    if($('#pictures-trash').length === 0)
+    {
+        this.$favouritePicturesTrash = $(`<div id="pictures-trash" title="$app.t('favPics[.]Drop the picture here to remove it')">`)
+            .append('<i class="pictures-trash-icon glyphicon glyphicon-trash">')
+            .appendTo(this.$favouritePicturesPanelRow);
+    }
+
+	/**
+	 * Create panel body
+	 */
+    if($('#pictures-body-panel').length === 0)
+    {
+        this.$favouritePicturesBodyPanel = $('<div id="pictures-body-panel">')
+            .appendTo(this.$favouritePicturesPanelRow);
+    }
 
 
+	/**
+	 * Create controls area
+	 */
+    if($('#pictures-control-panel').length === 0)
+    {
+        this.$favouritePicturesControlPanel = $('<div id="pictures-control-panel" class="row">')
+            .appendTo(this.$favouritePicturesPanel);
+    }
 
-    this.$favouritePicturesPanel = $('<div id="favourite-pictures-panel">')
-        .appendTo('#chat-panel')
-        .hide();
-    this.$favouritePicturesPanelRow = $('<div class="favourite-pictures-panel-row">')
-        .appendTo(this.$favouritePicturesPanel);
-
-
-    this.$favouritePicturesTrash = $('<div id="pictures-trash" title="' + app.t('favPics[.]Drop the picture here to remove it') + '">')
-        .append('<i class="pictures-trash-icon glyphicon glyphicon-trash">')
-        .appendTo(this.$favouritePicturesPanelRow);
-
-
-    this.$favouritePicturesBodyPanel = $('<div id="pictures-body-panel">')
-        .appendTo(this.$favouritePicturesPanelRow);
-
-
-
-    this.$favouritePicturesControlPanel = $('<div id="pictures-control-panel" class="row">')
-        .appendTo(this.$favouritePicturesPanel);
-
-    this.$favouritePicturesControlPanelForm = $('<div class="col-md-12">')
-        .html('<div class="input-group">' +
-            '<span class="input-group-btn">' +
-                '<button id="help-pictures-btn" class="btn btn-sm btn-default" style="border-radius:0;" type="button">?</button>' +
-            '</span>' +
-            '<span class="input-group-btn">' +
-                '<button id="export-pictures" class="btn btn-sm btn-default" style="border-radius:0;" type="button">' + app.t('favPics[.]Export pictures') + '</button>' +
-            '</span>' +
-             '<span class="input-group-btn">' +
-                '<label for="import-pictures" class="btn btn-sm btn-default" style="border-radius:0;">' + app.t('favPics[.]Import pictures') + '</label>' +
-                '<input type="file" style="display:none;" id="import-pictures" name="pictures-import">' +
-            '</span>' +
-            '<input type="text" id="picture-address" class="form-control input-sm" placeholder="' + app.t('favPics[.]Picture url') + '">' +
-            '<span class="input-group-btn">' +
-                '<button id="add-picture-btn" class="btn btn-sm btn-default" style="border-radius:0;" type="button">' + app.t('favPics[.]Add') + '</button>' +
-            '</span>' +
-        '</div>')
+    if($('#picture-address').length === 0)
+    {
+        this.$favouritePicturesControlPanelForm = $('<div class="row">')
+        .html(`<div class="input-group">
+            <span class="input-group-btn">
+                <button id="help-pictures-btn" class="btn btn-sm btn-default" style="border-radius:0;" type="button">?</button>
+            </span>
+            <span class="input-group-btn">
+                <button id="export-pictures" class="btn btn-sm btn-default" style="border-radius:0;" type="button"><span title="${app.t('favPics[.]Export pictures')}"><i class="glyphicon glyphicon-floppy-save"></i></span></button>
+            </span>
+             <span class="input-group-btn">
+                <label for="import-pictures" class="btn btn-sm btn-default" style="border-radius:0;"><span title="${app.t('favPics[.]Import pictures')}"><i class="glyphicon glyphicon-floppy-open"></i></span></label>
+                <input type="file" style="display:none;" id="import-pictures" name="pictures-import">
+            </span>
+            <input type="text" id="picture-address" class="form-control input-sm" placeholder="${app.t('favPics[.]Picture url')}">
+            <span class="input-group-btn">
+                <button id="add-picture-btn" class="btn btn-sm btn-default" style="border-radius:0;" type="button">${app.t('favPics[.]Add')}</button>
+            </span>
+        </div>`)
         .appendTo(this.$favouritePicturesControlPanel);
+    }
+    
+
+    /*************/
+    /* FUNCTIONS */
+    /*************/
 
 
-
+	/**
+	 * Smiles and Pictures
+	 */
     this.makeSmilesAndPicturesTogether = function () {
         that.smilesAndPicturesTogether = true;
         that.$toggleFavouritePicturesPanelBtn.hide();
@@ -75,6 +138,9 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
 
 
 
+	/**
+	 * Unsafe symbols
+	 */
     this.entityMap = {
         "&": "&amp;",
         "<": "&lt;",
@@ -85,27 +151,72 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     this.replaceUnsafeSymbol = function (symbol) {
         return that.entityMap[symbol];
     };
+
+
+
+	/**
+	 * Refresh images in the panel
+	 */
     this.renderFavouritePictures = function () {
+        /**
+         * Get images from storage
+         */
         var favouritePictures = app.storage.get('favouritePictures') || [];
 
+        /**
+         * Clear container
+         */
         this.$favouritePicturesBodyPanel.empty();
 
+        /**
+         * Populate container with loaded images
+         */
         for (var n = 0, favouritePicturesLen = favouritePictures.length; n < favouritePicturesLen; n++) {
             var escapedAddress = favouritePictures[n].replace(/[&<>"']/g, this.replaceUnsafeSymbol);
 
-            $('<img class="favourite-picture-on-panel">').attr({src: escapedAddress}).appendTo(this.$favouritePicturesBodyPanel);
+            var regexImg = /((?:http|https):\/\/[^?#]+?[.](?:jpg|jpeg|png|apng|bmp|svg|gif|webp)[^ ]*)/g;
+            var regexVideo = /((?:http|https):\/\/[^?#]+?[.](?:mp4|webm))[^ ]*/g;
+
+            if(regexImg.test(escapedAddress)){
+                $('<img class="favourite-picture-on-panel">')
+                    .attr({src: escapedAddress})
+                    .appendTo(this.$favouritePicturesBodyPanel);
+            }
+
+            if(regexVideo.test(escapedAddress)){
+                let video = $('<video>')
+                    .addClass('favourite-video-on-panel')
+                    .attr('preload', 'metadata')
+                    .attr('title', escapedAddress)
+                    .on('click', function () {
+                        that.insertFavouritePicture($(this).attr('title'));
+                    })
+                    .appendTo(this.$favouritePicturesBodyPanel);
+                
+                $('<source>')
+                    .attr('src', `${escapedAddress}#t=1.5`)
+                    .attr('type', 'video/mp4')
+                    .appendTo(video);
+            }
         }
     };
 
 
+	/**
+	 * Insert image into the chatline on click
+	 */
     this.insertFavouritePicture = function (address) {
-        app.Helpers.addMessageToChatInput(' ' + address + ' ', 'end');
+        app.Helpers.addMessageToChatInput(` ${address} `, 'end');
     };
     $(document.body).on('click', '.favourite-picture-on-panel', function () {
         that.insertFavouritePicture($(this).attr('src'));
     });
 
 
+	
+	/**
+	 * Favourite Pictures panel toggle
+	 */
     this.handleFavouritePicturesPanel = function ($toggleFavouritePicturesPanelBtn) {
         var smilesAndPicturesTogether = this.smilesAndPicturesTogether || false;
 
@@ -113,9 +224,10 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
             $('#smiles-panel').hide();
         }
 
+		/* Hide or show panel */
         this.$favouritePicturesPanel.toggle();
 
-
+		/* Handle class on the button */
         if (!smilesAndPicturesTogether) {
             if ($toggleFavouritePicturesPanelBtn.hasClass('btn-default')) {
                 if ($('#smiles-btn').length !== 0 && $('#smiles-btn').hasClass('btn-success')) {
@@ -136,15 +248,22 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     });
 
 
+
+	/**
+	 * Add picture
+	 */
     this.addFavouritePicture = function (imageUrl) {
+
+        // Add check for an image
+
+        // Ad check for a video
+
         imageUrl = _.trim(imageUrl);
         if (imageUrl !== '') {
             var favouritePictures = app.storage.get('favouritePictures') || [];
 
             if (favouritePictures.indexOf(imageUrl) === -1) {
-                if (imageUrl !== '') {
-                    favouritePictures.push(imageUrl);
-                }
+				favouritePictures.push(imageUrl);
             } else {
                 window.makeAlert(app.t('favPics[.]The image already exists')).prependTo(this.$favouritePicturesBodyPanel);
                 $('#picture-address').val('');
@@ -170,6 +289,10 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     });
 
 
+
+	/**
+	 * Help description
+	 */
     this.showHelp = function () {
         var $header = $('<div class="modal-header__inner">');
         $header.append($('<h3 class="modal-title">').text(app.t('Help')));
@@ -192,6 +315,9 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     });
 
 
+	/**
+	 * Export
+	 */
     this.exportPictures = function () {
         var $downloadLink = $('<a>')
             .attr({
@@ -210,6 +336,10 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     });
 
 
+
+	/**
+	 * Import
+	 */
     this.importPictures = function (importFile) {
         var favouritePicturesAddressesReader = new FileReader();
 
@@ -234,10 +364,17 @@ window.cytubeEnhanced.addModule('favouritePictures', function (app) {
     });
 
 
+	/**
+	 * Load pictures
+	 */
     this.renderFavouritePictures();
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * (drag & drop)
+	 */
     this.$favouritePicturesBodyPanel.sortable({
         containment: this.$favouritePicturesPanelRow,
         revert: true,

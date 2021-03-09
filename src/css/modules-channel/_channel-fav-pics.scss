@@ -1,0 +1,19 @@
+#favourite-pictures-panel {
+  margin: 4px 0px 0px;
+
+  img, video {
+    transition: all 0.075s ease-out;
+
+    &:hover {
+      transform: scale(1.7);
+    }
+  }
+}
+
+#pictures-trash {
+  text-align: start;
+
+  &:hover {
+    background: hsl(0, 75%, 35%);
+  }
+}

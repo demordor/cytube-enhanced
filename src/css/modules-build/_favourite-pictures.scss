@@ -10,11 +10,17 @@
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
 }
-#favourite-pictures-panel img {
-  margin: 5px;
-  max-height: 40px;
-  max-width: 80px;
-  cursor: pointer;
+#favourite-pictures-panel{
+  img, video {
+    margin: 5px;
+    max-height: 40px;
+    max-width: 80px;
+    cursor: pointer;
+  }
+
+  video {
+    transform: translateY(20px);
+  }
 }
 #pictures-trash {
   position: relative;

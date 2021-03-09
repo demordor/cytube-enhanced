@@ -49,7 +49,7 @@ window.cytubeEnhancedDefaultTranslates.ru = {
         'Show your favorite images': 'Показать избранные картинки',
         'Export pictures': 'Экспорт картинок',
         'Import pictures': 'Импорт картинок',
-        'Picture url': 'Адрес картинки в сети',
+        'Picture url': 'Адрес картинки или видео в сети',
         'Add': 'Добавить',
         'Remove': 'Удалить',
         'The image already exists': 'Такая картинка уже была добавлена',
