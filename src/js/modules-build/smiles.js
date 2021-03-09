@@ -11,7 +11,7 @@ window.cytubeEnhanced.addModule('smiles', function (app) {
     }
     
     if ($('#chat-controls').length === 0) {
-        $('<div id="chat-controls" class="btn-group">').appendTo("#chatwrap");
+        $('<div id="chat-controls" class="btn-group">').insertBefore('#newpollbtn');
     }
 
 
