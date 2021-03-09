@@ -1,0 +1,24 @@
+.panelemote {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin: 4px;
+
+  &:hover {
+    transform: scale(1.35);
+  }
+
+  transition: all 0.075s ease-out;
+}
+
+@media(max-width: 992px){
+  .chat-panel-mobile {
+    position: absolute;
+    z-index: 5;
+    right: 0% !important;
+    max-height: 60% !important;
+    max-width: 100%;
+    background-position: center;
+    overflow-y: auto;
+  }
+}
