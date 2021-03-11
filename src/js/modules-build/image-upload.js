@@ -47,9 +47,8 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
     .append(`<div class="text-center"><strong>${app.t('imageUpload[.]Upload a picture')}</strong></div>`)
     .append('<br>')
     .append('<strong>Загрузить картинку по ссылке</strong>')
-    .append('<p>Если не удается запостить картинку в чат, загрузите её с помощью этой формы</p>')
+    .append('<p class="text-muted">Если не удается запостить картинку в чат, загрузите её с помощью этой формы</p>')
     .appendTo(this.$imgUploadPanel);
-  
 
   /**
    * From link
@@ -65,7 +64,7 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
   /**
    * From file
    */
-  this.$imgUploadPanelContent.append('<strong>Загрузить картинку с компьютера</strong>');
+  this.$imgUploadPanelContent.append('<p><strong>Загрузить картинку с компьютера</strong></p>');
 
   this.$imgUploadForm = $('<form action method="post">').appendTo(this.$imgUploadPanelContent);
   this.$imgUploadFormGroup = $('<div class="form-group file-area">').appendTo(this.$imgUploadForm);
@@ -85,6 +84,9 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
   `).appendTo(this.$imgUploadFormGroup);
 
 
+  /***************/
+  /*  FUNCTIONS  */
+  /***************/
 
   this.renderImgUploadArea = function () {
     var $imageUploadPanel = $("#imageUploadPanel");
@@ -92,12 +94,10 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
     if ( $imageUploadPanel.hasClass('openPanel') ) {
       $imageUploadPanel.hide();
 
-
       $imageUploadPanel.removeClass('openPanel')	
       $imageUploadPanel.addClass('closePanel')	
     } else {
       $imageUploadPanel.show();
-      
 
       $imageUploadPanel.removeClass('closePanel')	
       $imageUploadPanel.addClass('openPanel')	
