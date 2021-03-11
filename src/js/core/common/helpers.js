@@ -32,4 +32,18 @@ window.CytubeEnhancedHelpers = function (app) {
 
         $chatline.val(message).focus();
     };
+
+    /**
+     * Toggles element between default and succes class
+     * @param element to toggle.
+     */
+     this.toggleDefaultSuccess = function (e) {
+        if ($(e).hasClass('btn-default')) {
+            $(e).removeClass('btn-default');
+            $(e).addClass('btn-success');
+        } else {
+            $(e).removeClass('btn-success');
+            $(e).addClass('btn-default');
+        }
+    };
 };
