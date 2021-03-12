@@ -2,6 +2,11 @@ window.CytubeEnhancedHelpers = function (app) {
     var that = this;
 
     /**
+     * Resize window on load to fix chat height
+     */
+    $(window).trigger('resize'); 
+
+    /**
      * Returns viewport size
      * @returns {{width: number, height: number}}
      */
@@ -37,7 +42,7 @@ window.CytubeEnhancedHelpers = function (app) {
      * Toggles element between default and succes class
      * @param element to toggle.
      */
-     this.toggleDefaultSuccess = function (e) {
+    this.toggleDefaultSuccess = function (e) {
         if ($(e).hasClass('btn-default')) {
             $(e).removeClass('btn-default');
             $(e).addClass('btn-success');
@@ -45,5 +50,30 @@ window.CytubeEnhancedHelpers = function (app) {
             $(e).removeClass('btn-success');
             $(e).addClass('btn-default');
         }
+    };
+
+    /**
+     * Check for min rank
+     * @param min rank.
+     */
+    this.checkMinRank = function (rank) {
+        return window.CLIENT.rank < rank;
+    };
+
+    /**
+     * Remove Data-URL declaration from base64
+     * @param base64 string.
+     * @returns base64 raw string.
+     */
+     this.toBase64Raw = function (base64Dirty) {
+        return base64Dirty.substr(base64Dirty.indexOf(",") + 1, base64Dirty.length);
+    };
+
+    /**
+     * Get regex for image files.
+     * @returns regex expression for image extensions.
+     */
+     this.getImageFilterRegex = function () {
+        return  /((?:http|https):\/\/[^?#]+?[.](?:jpg|jpeg|png|apng|bmp|svg|gif|webp)[^ ]*)/g;
     };
 };

@@ -185,6 +185,12 @@ window.cytubeEnhancedDefaultTranslates.ru = {
         'Apply this theme?': 'Изменить тему на выбранную?',
         'Default theme was changed to "%themeTitle%" by administrator. Do you want to try it? (Don\'t forget, that you can switch your theme in extended settings anytime.)': 'Тема по умолчанию была измена администратором на "%themeTitle%". Вы хотите попробовать её? (Не забывайте, что вы можете поменять свою тему в расширенных настройках в любое время.)'
     },
+    imageUpload: {
+        'Ctrl + V / Drop / Choose an image': 'Ctrl + V / Перетащите / Выберите картинку',
+        "Wrong file format!": 'Неверный формат файла!',
+        "The file is too big!": 'Слишком большой размер файла!',
+        "Upload failed!": 'Не удалось загрузить картинку на сервер!',
+    },
     'Help': 'Помощь',
     'Close': 'Закрыть',
     'ru': 'Русский',

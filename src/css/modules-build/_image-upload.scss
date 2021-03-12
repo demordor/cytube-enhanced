@@ -2,31 +2,15 @@
 
 	#imageUploadPanelContent {
 		margin-top: 10px;
-
-		/* Image upload from link */
-
-		.img-upload-link-input {
-			padding-right: 40px;
-		}
-
-		.img-upload-link-btn {
-			position: relative;
-			top: -34px;
-			margin-left: calc(100% - 38px);
-			opacity: 0.5;
-		
-			&:hover {
-				opacity: 1;
-			}
-		}
+		margin-bottom: 0;
+		padding-bottom: 0;
 
 		/* File Area */
-
 		.file-area{
 			width: 100%;
 			position: relative;
 
-			#imgUploadArea {
+			input[type=file] {
 				position: absolute;
 				width: 100%;
 				height: 100%;
@@ -42,48 +26,42 @@
 				width: 100%;
 				padding: 30px;
 				padding-top: 65px;
-				background: rgba(85, 185, 235, 0.15);
-				border: 3px dashed rgba(85, 185, 235, 0.3);
+				background-color: rgba(75, 175, 225, 0.125);
+				border: 4px dashed rgba(85, 185, 235, 0.25);
 				text-align: center;
-				transition: background 0.3s ease-in-out;
+				transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out,;
 
-				.success {
-					display: none;
+				.uploadAreaText {
+					color: rgba(255, 255, 255, 0.55);
+					font-size: 24px;
 				}
 			}
 
 			&:hover .file-dummy {
-				background: rgba(55, 155, 205, 0.35);
+				background-color: rgba(75, 175, 225, 0.25);
+				border: 4px dashed rgba(85, 185, 235, 0.5);
+
+				.uploadAreaText {
+					color: rgba(255, 255, 255, 0.65);
+				}
 			}
 
-			&:focus + .file-dummy {
-				outline: none;
+
+			.file-dummy.imgUploadError {
+				background-color: rgba(225, 75, 175, 0.25);
+				border: 4px dashed rgba(235, 85, 185, 0.5);
 			}
 
-			&:valid + .file-dummy {
-				border-color: rgba(55, 225, 105, 0.4);
-				background-color: rgba(55, 225, 105, 0.3);
+			.file-dummy.imgUploadSuccess {
+				background-color: rgba(75, 225, 90, 0.25);
+				border: 4px dashed rgba(85, 235, 100, 0.5);
 			}
 
-			&:valid + .file-dummy .success {
-				display: inline-block;
-			}
-
-			&:valid + .file-dummy .default {
-				display: none;
-			}
 
 			/* Progress Bar */
 
-			#imgProgress {
-				width: 100%;
-				background-color: rgb(20, 22, 26);
-			}
-			
 			#imgProgressBar {
-				width: 0%;
-				height: 4px;
-				background-color: rgb(75,175,225);
+				height: 8px;
 			}
 
 			/* Image Preview */
