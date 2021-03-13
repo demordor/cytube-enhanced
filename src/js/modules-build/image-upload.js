@@ -249,12 +249,12 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
           .on('load', function() {
             const regexp = app.Helpers.getImageFilterRegex();
             if(!regexp.test(fileText))
-            { that.uploadImgFromLink(fileText) }
+            { that.handleLinkImgUpload(fileText) }
 
             $(this)[0].remove();
           })
           .on("error", function () {
-            that.uploadImgFromLink(fileText);
+            that.handleLinkImgUpload(fileText);
             $(this)[0].remove();
         });
         continue;
