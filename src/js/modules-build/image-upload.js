@@ -2,13 +2,11 @@ window.cytubeEnhanced.addModule('imageUpload', function (app, settings) {
   'use strict';
   const that = this;
 
-  // Image-upload.js
-  // image-upload.scss
-  // ru.js
-  // helpers.js
-
   // TODO:
-  // add multiple files
+  // Abstract code. (use promises for ajax calls)
+  // Add multiple file upload.
+  // Move panel above the message buffer. (remove progress bar)
+  // Image previews for image links in the chatline. (progress bar for each image upload)
 
   /**
    * Settings
